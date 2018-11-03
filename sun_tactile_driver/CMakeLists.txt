@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 2.8.3)
 project(sun_tactile_driver)
 
 ## Compile as C++11, supported in ROS Kinetic and newer
-# add_compile_options(-std=c++11)
+add_compile_options(-std=c++11)
 
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
@@ -11,6 +11,7 @@ find_package(catkin REQUIRED COMPONENTS
 roscpp
 sun_tactile_common
 serial
+sun_systems_lib
 )
 
 ## System dependencies are found with CMake's conventions
@@ -204,6 +205,15 @@ add_executable(read_tactile_serial
 )
 add_dependencies(read_tactile_serial ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 target_link_libraries(read_tactile_serial
+  ${catkin_LIBRARIES}
+)
+#########################################
+#########################################
+add_executable(filter_voltages
+  src/filter_voltages_node.cpp
+)
+add_dependencies(filter_voltages ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(filter_voltages
   ${catkin_LIBRARIES}
 )
 #########################################
