@@ -53,7 +53,7 @@ Vector<>* volt_reduce;
 Matrix<>* Ureduce;
 string in_voltage_topic_str;
 //*******GLOBAL ROS VARS******//
-ros::NodeHandle* n;
+ros::NodeHandle* nh_public;
 //----------------------------//
 //*******PUBLISHERS**********//
 ros::Publisher pubWrench;
@@ -147,22 +147,23 @@ int main(int argc, char *argv[]){
 
 	ros::init(argc,argv,"read_wrench");
 
-	n = new ros::NodeHandle("~");
+	ros::NodeHandle nh_private = ros::NodeHandle("~");
+    nh_public = new ros::NodeHandle();
 
     
     /**** CHECK PARAMS ****/
     string path("");
     path = ros::package::getPath("wsg_50_driver_sun");
     path = path + "/Finger_files/";
-    n->param("fingerCode" , fingerCode, string("") );
+    nh_private.param("fingerCode" , fingerCode, string("") );
 
-    n->param("in_voltage_topic" , in_voltage_topic_str, string("tactile_voltage/raw") );
+    nh_private.param("in_voltage_topic" , in_voltage_topic_str, string("tactile_voltage/raw") );
     string voltage_rect_topic_str;
-    n->param("voltage_rect_topic" , voltage_rect_topic_str, string("tactile_voltage/rect") );
+    nh_private.param("voltage_rect_topic" , voltage_rect_topic_str, string("tactile_voltage/rect") );
     string wrench_topic_str;
-    n->param("wrench_topic" , wrench_topic_str, string("wrench") );
+    nh_private.param("wrench_topic" , wrench_topic_str, string("wrench") );
     string service_remove_bias_str;
-    n->param("service_remove_bias" , service_remove_bias_str, string("removeBias") );
+    nh_private.param("service_remove_bias" , service_remove_bias_str, string("removeBias") );
 
     if( fingerCode.empty() ){
         cout << BOLDRED << "Error! - No params for 'fingerCode' - stopping node... " << CRESET << endl;
@@ -187,9 +188,9 @@ int main(int argc, char *argv[]){
 
     /*******INIT ROS PUB**********/
     //Force pub
-	pubWrench = n->advertise<geometry_msgs::WrenchStamped>( wrench_topic_str ,1);
+	pubWrench = nh_public->advertise<geometry_msgs::WrenchStamped>( wrench_topic_str ,1);
 	//Voltage_rect pub
-	pubVoltagesRect = n->advertise<sun_tactile_common::TactileStamped>( voltage_rect_topic_str ,1);
+	pubVoltagesRect = nh_public->advertise<sun_tactile_common::TactileStamped>( voltage_rect_topic_str ,1);
     /***************************/
 
     /*******INIT MODEL**********/
@@ -199,9 +200,9 @@ int main(int argc, char *argv[]){
 
     /*******INIT ROS SUB**********/
 	//Status subscriber
-	ros::Subscriber subVoltage = n->subscribe( in_voltage_topic_str, 1, readV);
+	ros::Subscriber subVoltage = nh_public->subscribe( in_voltage_topic_str, 1, readV);
 	//Remove bias subscriber
-	ros::ServiceServer serviceRemoveBias = n->advertiseService( service_remove_bias_str, removeBias);
+	ros::ServiceServer serviceRemoveBias = nh_public->advertiseService( service_remove_bias_str, removeBias);
     /***************************/
 
 
@@ -226,7 +227,7 @@ void _removeBias(){
     Matrix<N_MEAN,NUM_V> lastVReads = Zeros; //buffer
 
     //redefinition of subscriber cause you can't use previouse subscriber in a service
-    ros::Subscriber subVoltage = n->subscribe( in_voltage_topic_str, 1, readV);
+    ros::Subscriber subVoltage = nh_public->subscribe( in_voltage_topic_str, 1, readV);
 
     //*****Fill lastVReads Matrix****//
     int _index = 0; //I don't use first 10 samples

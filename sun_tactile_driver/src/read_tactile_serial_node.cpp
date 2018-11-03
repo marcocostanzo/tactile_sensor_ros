@@ -42,25 +42,26 @@ int main(int argc, char *argv[]){
 
     ros::init(argc,argv,"read_tactile_serial");
 
-    ros::NodeHandle nh = ros::NodeHandle("~");
+    ros::NodeHandle nh_private = ros::NodeHandle("~");
+    ros::NodeHandle nh_public = ros::NodeHandle();
 
     /**** CHECK PARAMS ****/
     string serial_port = string("");
-    nh.param("serial_port" , serial_port, string("/dev/ttyUSB0") );
+    nh_private.param("serial_port" , serial_port, string("/dev/ttyUSB0") );
     unsigned long baud = 0;
     string str_baud = string("");
-    nh.param("baud_rate" , str_baud, string("500000") );
+    nh_private.param("baud_rate" , str_baud, string("500000") );
     sscanf(str_baud.c_str(), "%lu", &baud);
     int serialTimeout = 0;
-    nh.param("serial_timeout" , serialTimeout, 1000 );
+    nh_private.param("serial_timeout" , serialTimeout, 1000 );
     int num_rows;
-    nh.param("rows" , num_rows, 5 );
+    nh_private.param("rows" , num_rows, 5 );
     int num_cols;
-    nh.param("cols" , num_cols, 5 );
+    nh_private.param("cols" , num_cols, 5 );
     string frame_id = string("");
-    nh.param("frame_id" , frame_id, string("fingertip0") );
+    nh_private.param("frame_id" , frame_id, string("fingertip0") );
     string topic_name = string("");
-    nh.param("output_topic" , topic_name, string("/tactile") );
+    nh_private.param("output_topic" , topic_name, string("/tactile") );
 
     /*** INIT SERIAL ****/	
     serial::Serial my_serial(serial_port, baud, serial::Timeout::simpleTimeout(serialTimeout));
@@ -82,7 +83,7 @@ int main(int argc, char *argv[]){
    finger_voltages.tactile.info = "voltages";
    
    // ======= PUBLISHER
-   ros::Publisher pubTactile = nh.advertise<sun_tactile_common::TactileStamped>( topic_name ,1);
+   ros::Publisher pubTactile = nh_public.advertise<sun_tactile_common::TactileStamped>( topic_name ,1);
    
    //init buffers
    const int dim_buffer = voltages_count*2;

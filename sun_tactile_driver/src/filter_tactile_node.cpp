@@ -72,18 +72,19 @@ int main(int argc, char *argv[])
 
     ros::init(argc,argv,"filter_voltages");
 
-    ros::NodeHandle nh("~");
+    ros::NodeHandle nh_private("~");
+    ros::NodeHandle nh_public = ros::NodeHandle();
 
     /**** PARAMS ****/
-    nh.param("num_voltages" , num_voltages, 25 );
+    nh_private.param("num_voltages" , num_voltages, 25 );
     string str_in_topic = string("");
-    nh.param("in_topic" , str_in_topic, string("/tactile") );
+    nh_private.param("in_topic" , str_in_topic, string("/tactile") );
     string str_out_topic = string("");
-    nh.param("out_topic" , str_out_topic, str_in_topic + string("/filter") );
+    nh_private.param("out_topic" , str_out_topic, str_in_topic + string("/filter") );
     double cut_freq;
-    nh.param("cut_freq" , cut_freq, 20.0 );
+    nh_private.param("cut_freq" , cut_freq, 20.0 );
     double Hz;
-    nh.param("rate" , Hz, 500.0 );
+    nh_private.param("rate" , Hz, 500.0 );
 	/************************************/
 
     /******INIT ROS MSGS**********/
@@ -96,12 +97,12 @@ int main(int argc, char *argv[])
 
     /*******INIT ROS PUB**********/
 	//Voltage_filter pub
-	pubVoltagesFilter = nh.advertise<sun_tactile_common::TactileStamped>( str_out_topic, 1);
+	pubVoltagesFilter = nh_public.advertise<sun_tactile_common::TactileStamped>( str_out_topic, 1);
     /***************************/
 
     /*******INIT ROS SUB**********/
 	//Status subscriber
-	ros::Subscriber subVoltages = nh.subscribe( str_in_topic , 1, readV);
+	ros::Subscriber subVoltages = nh_public.subscribe( str_in_topic , 1, readV);
     /***************************/
 
     /******INIT FILTER************/
