@@ -211,11 +211,11 @@ target_link_libraries(read_tactile_serial
 )
 #########################################
 #########################################
-add_executable(filter_voltages
-  src/filter_voltages_node.cpp
+add_executable(filter_tactile
+  src/filter_tactile_node.cpp
 )
-add_dependencies(filter_voltages ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
-target_link_libraries(filter_voltages
+add_dependencies(filter_tactile ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(filter_tactile
   ${catkin_LIBRARIES}
 )
 #########################################
