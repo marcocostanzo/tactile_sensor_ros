@@ -1,7 +1,9 @@
 <launch>
 
-<arg name="namespace_finger0" value="finger0" />
-<arg name="namespace_finger1" value="finger1" />
+<arg name="wrench_topic" default="wrench"/>
+
+<arg name="namespace_finger0" default="finger0" />
+<arg name="namespace_finger1" default="finger1" />
 
 <arg name="serial_port_finger0" default="/dev/ttyUSB0" />
 <arg name="serial_port_finger1" default="/dev/ttyUSB1" />
@@ -9,17 +11,24 @@
 <arg name="frame_id_finger0" default="fingertip0" />
 <arg name="frame_id_finger1" default="fingertip1" />
 
-<arg name="finger0_code" value="#H003-28A" />
-<arg name="finger1_code" value="#H004-28A" />
+<arg name="finger0_code" default="#H003-28A" />
+<arg name="finger1_code" default="#H004-28A" />
 
 <arg name="voltage_topic" default="tactile_voltage" />
-<arg name="wrench_topic" default="wrench" />
+<arg name="finger_wrench_topic" default="$(arg wrench_topic)" />
 <arg name="remove_bias_srv" default="removeBias" />
 
 <arg name="cut_freq_filter_voltage" default="20.0" />
 <arg name="rate_filter_voltage" default="500.0" />
-<arg name="cut_freq_filter_wrench" value="20.0" />
-<arg name="rate_filter_wrench" value="500.0" />
+<arg name="cut_freq_filter_wrench" default="20.0" />
+<arg name="rate_filter_wrench" default="500.0" />
+
+<arg name="finger_distance_topic" default="distance"/>
+<arg name="finger_distance_offset" default="0.0"/>
+
+<arg name="frame_id_grasp" default="grasp_center"/>
+
+<arg name="grasp_force_topic" default="grasp_force"/>
 
     <group ns="$(arg namespace_finger0)">
         <include file="$(find sun_tactile_driver)/launch/read_wrench.launch">
@@ -35,7 +44,7 @@
             <arg name="cut_freq_filter_voltage" value="$(arg cut_freq_filter_voltage)" />
             <arg name="rate_filter_voltage" value="$(arg rate_filter_voltage)" />
 
-            <arg name="wrench_topic" value="$(arg wrench_topic)" />
+            <arg name="wrench_topic" value="$(arg finger_wrench_topic)" />
             <arg name="remove_bias_srv" value="$(arg remove_bias_srv)" />
 
             <arg name="cut_freq_filter_wrench" value="$(arg cut_freq_filter_wrench)" />
@@ -58,7 +67,7 @@
             <arg name="cut_freq_filter_voltage" value="$(arg cut_freq_filter_voltage)" />
             <arg name="rate_filter_voltage" value="$(arg rate_filter_voltage)" />
 
-            <arg name="wrench_topic" value="$(arg wrench_topic)" />
+            <arg name="wrench_topic" value="$(arg finger_wrench_topic)" />
             <arg name="remove_bias_srv" value="$(arg remove_bias_srv)" />
 
             <arg name="cut_freq_filter_wrench" value="$(arg cut_freq_filter_wrench)" />
@@ -67,5 +76,19 @@
         </include>
     </group>
     
+    <node name="combine_wrench" pkg="sun_tactile_driver" type="combine_wrench" output="screen">
+
+        <param name="wrench0_topic" type="string" value="$(arg namespace_finger0)/$(arg wrench_topic)"/>
+        <param name="wrench1_topic" type="string" value="$(arg namespace_finger1)/$(arg wrench_topic)"/>
+
+        <param name="distance_topic" type="string" value="$(arg finger_distance_topic)"/>
+        <param name="distance_offset" type="double" value="$(arg finger_distance_offset)"/>
+
+        <param name="frame_id" type="string" value="$(arg frame_id_grasp)"/>
+
+        <param name="wrench_out_topic" type="string" value="$(arg wrench_topic)"/>
+        <param name="grasp_force_topic" type="string" value="$(arg grasp_force_topic)"/>
+
+    </node>
 
 </launch>
