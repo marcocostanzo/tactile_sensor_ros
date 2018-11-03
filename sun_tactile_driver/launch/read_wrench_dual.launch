@@ -1,0 +1,71 @@
+<launch>
+
+<arg name="namespace_finger0" value="finger0" />
+<arg name="namespace_finger1" value="finger1" />
+
+<arg name="serial_port_finger0" default="/dev/ttyUSB0" />
+<arg name="serial_port_finger1" default="/dev/ttyUSB1" />
+
+<arg name="frame_id_finger0" default="fingertip0" />
+<arg name="frame_id_finger1" default="fingertip1" />
+
+<arg name="finger0_code" value="#H003-28A" />
+<arg name="finger1_code" value="#H004-28A" />
+
+<arg name="voltage_topic" default="tactile_voltage" />
+<arg name="wrench_topic" default="wrench" />
+<arg name="remove_bias_srv" default="removeBias" />
+
+<arg name="cut_freq_filter_voltage" default="20.0" />
+<arg name="rate_filter_voltage" default="500.0" />
+<arg name="cut_freq_filter_wrench" value="20.0" />
+<arg name="rate_filter_wrench" value="500.0" />
+
+    <group ns="$(arg namespace_finger0)">
+        <include file="$(find sun_tactile_driver)/launch/read_wrench.launch">
+
+            <arg name="serial_port" value="$(arg serial_port_finger0)" />
+
+            <arg name="frame_id" value="$(arg frame_id_finger0)" />
+
+            <arg name="finger_code" value="$(arg finger0_code)" />
+
+            <arg name="voltage_topic" value="$(arg voltage_topic)" />
+
+            <arg name="cut_freq_filter_voltage" value="$(arg cut_freq_filter_voltage)" />
+            <arg name="rate_filter_voltage" value="$(arg rate_filter_voltage)" />
+
+            <arg name="wrench_topic" value="$(arg wrench_topic)" />
+            <arg name="remove_bias_srv" value="$(arg remove_bias_srv)" />
+
+            <arg name="cut_freq_filter_wrench" value="$(arg cut_freq_filter_wrench)" />
+            <arg name="rate_filter_wrench" value="$(arg rate_filter_wrench)" />
+    
+        </include>
+    </group>
+
+    <group ns="$(arg namespace_finger1)">
+        <include file="$(find sun_tactile_driver)/launch/read_wrench.launch">
+
+            <arg name="serial_port" value="$(arg serial_port_finger1)" />
+
+            <arg name="frame_id" value="$(arg frame_id_finger1)" />
+
+            <arg name="finger_code" value="$(arg finger1_code)" />
+
+            <arg name="voltage_topic" value="$(arg voltage_topic)" />
+
+            <arg name="cut_freq_filter_voltage" value="$(arg cut_freq_filter_voltage)" />
+            <arg name="rate_filter_voltage" value="$(arg rate_filter_voltage)" />
+
+            <arg name="wrench_topic" value="$(arg wrench_topic)" />
+            <arg name="remove_bias_srv" value="$(arg remove_bias_srv)" />
+
+            <arg name="cut_freq_filter_wrench" value="$(arg cut_freq_filter_wrench)" />
+            <arg name="rate_filter_wrench" value="$(arg rate_filter_wrench)" />
+    
+        </include>
+    </group>
+    
+
+</launch>
