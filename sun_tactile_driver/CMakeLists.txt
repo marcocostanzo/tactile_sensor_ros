@@ -9,9 +9,11 @@ add_compile_options(-std=c++11)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
 roscpp
+roslib
 sun_tactile_common
 serial
 sun_systems_lib
+sun_learning_lib
 )
 
 ## System dependencies are found with CMake's conventions
@@ -214,6 +216,15 @@ add_executable(filter_voltages
 )
 add_dependencies(filter_voltages ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 target_link_libraries(filter_voltages
+  ${catkin_LIBRARIES}
+)
+#########################################
+#########################################
+add_executable(read_wrench
+  src/read_wrench_node.cpp
+)
+add_dependencies(read_wrench ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(read_wrench
   ${catkin_LIBRARIES}
 )
 #########################################
