@@ -51,9 +51,8 @@ bool b_pca = false;
 Vector<NUM_V> pca_mean;
 Vector<>* volt_reduce;
 Matrix<>* Ureduce;
-
+string in_voltage_topic_str;
 //*******GLOBAL ROS VARS******//
-string name_space;
 ros::NodeHandle* n;
 //----------------------------//
 //*******PUBLISHERS**********//
@@ -155,11 +154,17 @@ int main(int argc, char *argv[]){
     string path("");
     path = ros::package::getPath("wsg_50_driver_sun");
     path = path + "/Finger_files/";
-    n->param("fingerCode" , fingerCode, string("null") );
-    bool b_filteredVoltage = false;
-    n->param("filteredVoltage" , b_filteredVoltage, false );
+    n->param("fingerCode" , fingerCode, string("") );
 
-    if(fingerCode == string("null")){
+    n->param("in_voltage_topic" , in_voltage_topic_str, string("tactile_voltage/raw") );
+    string voltage_rect_topic_str;
+    n->param("voltage_rect_topic" , voltage_rect_topic_str, string("tactile_voltage/rect") );
+    string wrench_topic_str;
+    n->param("wrench_topic" , wrench_topic_str, string("wrench") );
+    string service_remove_bias_str;
+    n->param("service_remove_bias" , service_remove_bias_str, string("removeBias") );
+
+    if( fingerCode.empty() ){
         cout << BOLDRED << "Error! - No params for 'fingerCode' - stopping node... " << CRESET << endl;
         return -1; 
     }
@@ -171,7 +176,7 @@ int main(int argc, char *argv[]){
 
     //path = path + fingerCode + "/LinearCalib/K_" + fingerCode  + ".txt";
     
-    name_space = ros::this_node::getNamespace();
+    //name_space = ros::this_node::getNamespace();
 
     cout << BOLDBLUE << "Finger " << fingerCode << endl;
     /*************************************************/
@@ -182,9 +187,9 @@ int main(int argc, char *argv[]){
 
     /*******INIT ROS PUB**********/
     //Force pub
-	pubWrench = n->advertise<geometry_msgs::WrenchStamped>( name_space + "/wrench",1);
+	pubWrench = n->advertise<geometry_msgs::WrenchStamped>( wrench_topic_str ,1);
 	//Voltage_rect pub
-	pubVoltagesRect = n->advertise<sun_tactile_common::TactileStamped>( name_space + "/tactile_voltage/rect",1);
+	pubVoltagesRect = n->advertise<sun_tactile_common::TactileStamped>( voltage_rect_topic_str ,1);
     /***************************/
 
     /*******INIT MODEL**********/
@@ -194,9 +199,9 @@ int main(int argc, char *argv[]){
 
     /*******INIT ROS SUB**********/
 	//Status subscriber
-	ros::Subscriber subVoltage = n->subscribe(name_space + "/tactile_voltage" + ( b_filteredVoltage ? "/filter" : "" ),1,readV);
+	ros::Subscriber subVoltage = n->subscribe( in_voltage_topic_str, 1, readV);
 	//Remove bias subscriber
-	ros::ServiceServer serviceRemoveBias = n->advertiseService(name_space + "/removeBias", removeBias);
+	ros::ServiceServer serviceRemoveBias = n->advertiseService( service_remove_bias_str, removeBias);
     /***************************/
 
 
@@ -221,7 +226,7 @@ void _removeBias(){
     Matrix<N_MEAN,NUM_V> lastVReads = Zeros; //buffer
 
     //redefinition of subscriber cause you can't use previouse subscriber in a service
-    ros::Subscriber subVoltage = n->subscribe(name_space + "/tactile_voltage",1,readV);
+    ros::Subscriber subVoltage = n->subscribe( in_voltage_topic_str, 1, readV);
 
     //*****Fill lastVReads Matrix****//
     int _index = 0; //I don't use first 10 samples
