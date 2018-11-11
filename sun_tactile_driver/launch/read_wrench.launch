@@ -20,7 +20,7 @@
   <!-- Insert here finger ID [e.g. #F001-28A] | You MUST provide a calibration folder in <pkg-name>/Finger_files-->
   <arg name="finger_code" default="#H002-28A" />
   <arg name="wrench_topic" default="wrench" />
-  <arg name="remove_bias_srv" default="removeBias" />
+  <arg name="remove_bias_srv" default="remove_bias" />
 
   <arg name="cut_freq_filter_wrench" default="20.0" />
   <arg name="rate_filter_wrench" default="500.0" />

@@ -16,7 +16,7 @@
 
 <arg name="voltage_topic" default="tactile_voltage" />
 <arg name="finger_wrench_topic" default="$(arg wrench_topic)" />
-<arg name="remove_bias_srv" default="removeBias" />
+<arg name="remove_bias_srv" default="remove_bias" />
 
 <arg name="cut_freq_filter_voltage" default="20.0" />
 <arg name="rate_filter_voltage" default="500.0" />
