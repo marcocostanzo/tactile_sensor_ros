@@ -153,7 +153,7 @@ int main(int argc, char *argv[]){
     
     /**** CHECK PARAMS ****/
     string path("");
-    path = ros::package::getPath("wsg_50_driver_sun");
+    path = ros::package::getPath("sun_tactile_driver");
     path = path + "/Finger_files/";
     nh_private.param("fingerCode" , fingerCode, string("") );
 
