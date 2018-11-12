@@ -11,8 +11,8 @@
 <arg name="frame_id_finger0" default="fingertip0" />
 <arg name="frame_id_finger1" default="fingertip1" />
 
-<arg name="finger0_code" default="#H003-28A" />
-<arg name="finger1_code" default="#H004-28A" />
+<arg name="finger0_code" default="#H003_resina" />
+<arg name="finger1_code" default="#H004_resina" />
 
 <arg name="voltage_topic" default="tactile_voltage" />
 <arg name="finger_wrench_topic" default="$(arg wrench_topic)" />

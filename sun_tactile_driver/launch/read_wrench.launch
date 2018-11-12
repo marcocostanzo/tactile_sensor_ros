@@ -18,7 +18,7 @@
   <arg name="rate_filter_voltage" default="500.0" />
 
   <!-- Insert here finger ID [e.g. #F001-28A] | You MUST provide a calibration folder in <pkg-name>/Finger_files-->
-  <arg name="finger_code" default="#H002-28A" />
+  <arg name="finger_code" default="#H003_resina" />
   <arg name="wrench_topic" default="wrench" />
   <arg name="remove_bias_srv" default="remove_bias" />
 
