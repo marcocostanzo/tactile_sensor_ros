@@ -237,3 +237,12 @@ target_link_libraries(combine_wrench
   ${catkin_LIBRARIES}
 )
 #########################################
+#########################################
+add_executable(rotate_force
+  src/rotate_force_node.cpp
+)
+add_dependencies(rotate_force ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(rotate_force
+  ${catkin_LIBRARIES}
+)
+#########################################

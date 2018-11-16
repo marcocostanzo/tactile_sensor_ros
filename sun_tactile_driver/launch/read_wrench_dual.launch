@@ -30,6 +30,9 @@
 
 <arg name="grasp_force_topic" default="grasp_force"/>
 
+<arg name="finger_contact_wrench_topic" default="contact_wrench"/>
+<arg name="centroid_topic" default="centroid"/>
+
     <group ns="$(arg namespace_finger0)">
         <include file="$(find sun_tactile_driver)/launch/read_wrench.launch">
 
@@ -49,6 +52,9 @@
 
             <arg name="cut_freq_filter_wrench" value="$(arg cut_freq_filter_wrench)" />
             <arg name="rate_filter_wrench" value="$(arg rate_filter_wrench)" />
+
+            <arg name="contact_wrench_topic" value="$(arg finger_contact_wrench_topic)"/>
+            <arg name="centroid_topic" value="$(arg centroid_topic)"/>
     
         </include>
     </group>
@@ -72,6 +78,9 @@
 
             <arg name="cut_freq_filter_wrench" value="$(arg cut_freq_filter_wrench)" />
             <arg name="rate_filter_wrench" value="$(arg rate_filter_wrench)" />
+
+            <arg name="contact_wrench_topic" value="$(arg finger_contact_wrench_topic)"/>
+            <arg name="centroid_topic" value="$(arg centroid_topic)"/>
     
         </include>
     </group>

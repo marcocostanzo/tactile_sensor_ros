@@ -25,6 +25,9 @@
   <arg name="cut_freq_filter_wrench" default="20.0" />
   <arg name="rate_filter_wrench" default="500.0" />
 
+  <arg name="contact_wrench_topic" default="contact_wrench"/>
+  <arg name="centroid_topic" default="centroid"/>
+
   
   <node name="read_tactile_serial"  pkg="sun_tactile_driver" type="read_tactile_serial" output="screen">
 
@@ -84,6 +87,27 @@
     <param name="cut_freq" value="$(arg cut_freq_filter_wrench)"/>
 
     <param name="rate" value="$(arg rate_filter_wrench)"/>
+
+  </node>
+
+  <node name="rotate_force" pkg="sun_tactile_driver" type="rotate_force" output="screen">
+
+    <param name="voltages_topic" type="string" value="$(arg voltage_topic)/rect"/>
+
+    <param name="in_force_topic" type="string" value="$(arg wrench_topic)"/>
+
+    <param name="out_force_topic" type="string" value="$(arg contact_wrench_topic)"/>
+
+    <param name="out_centroid_topic" type="string" value="$(arg centroid_topic)"/>
+
+    <param name="radius" value="0.05"/>
+
+    <param name="voltage_thr" value="0.005"/>
+
+    <param name="tmp_distance_sensor_sphere" value="-0.02"/>
+
+    <param name="cell_distance_coeff" value="0.007"/>
+    
 
   </node>
 
