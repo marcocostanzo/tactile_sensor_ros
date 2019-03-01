@@ -56,7 +56,7 @@ void readV( const sun_tactile_common::TactileStamped::ConstPtr& msg  ){
         voltages_ptr[ii] = msg->tactile.data[ii];
 	}
 
-	msgVoltageFilter.header.stamp = msg->header.stamp;
+	msgVoltageFilter.header.stamp = ros::Time::now(); //msg->header.stamp;
     msgVoltageFilter.header.frame_id = msg->header.frame_id;
     msgVoltageFilter.tactile.info = msg->tactile.info;
     msgVoltageFilter.tactile.rows = msg->tactile.rows;

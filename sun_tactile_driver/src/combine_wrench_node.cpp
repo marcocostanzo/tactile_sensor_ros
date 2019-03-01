@@ -184,7 +184,8 @@ geometry_msgs::WrenchStamped trWrench( const geometry_msgs::WrenchStamped::Const
     outMsg.wrench.torque.y = m_tr[1];
     outMsg.wrench.torque.z = m_tr[2];
 
-    totalWrench_msg.header.stamp = msg->header.stamp;
+    if(msg->header.stamp > totalWrench_msg.header.stamp)
+        totalWrench_msg.header.stamp = msg->header.stamp;
 
     return outMsg;
 
