@@ -46,7 +46,7 @@
 
   </node>
 
-
+<!--
   <node name="filter_tactile" pkg="sun_tactile_driver" type="filter_tactile" output="screen">
 
     <param name="in_topic" type="string" value="$(arg voltage_topic)/raw"/>
@@ -60,14 +60,14 @@
     <param name="rate" value="$(arg rate_filter_voltage)"/>
 
   </node>
-
+-->
 
   <node name="read_wrench" pkg="sun_tactile_driver" type="read_wrench" output="screen">
 
     <!-- Insert here finger ID [#A123-45B] | You MUST provide a calibration folder in <pkg-name>/Finger_files-->
     <param name="fingerCode" type="string" value="$(arg finger_code)"/>
 
-    <param name="in_voltage_topic" type="string" value="$(arg voltage_topic)/filter"/>
+    <param name="in_voltage_topic" type="string" value="$(arg voltage_topic)/raw"/>
 
     <param name="voltage_rect_topic" type="string" value="$(arg voltage_topic)/rect"/>
 
