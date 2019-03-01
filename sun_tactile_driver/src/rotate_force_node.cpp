@@ -134,8 +134,7 @@ void wrench_Callback (const geometry_msgs::WrenchStamped::ConstPtr& msg) {
     msg_out_force.wrench.torque.y = c_torque[1];
     msg_out_force.wrench.torque.z = c_torque[2];
 
-    geometry_msgs::WrenchStamped msg_out_grasp_force;
-    msg_out_force.wrench.force.z = c_force[2];
+    msg_out_force.header.stamp = msg->header.stamp;
 
 
     pub_force.publish(msg_out_force);
