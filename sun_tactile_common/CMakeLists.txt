@@ -10,6 +10,7 @@ project(sun_tactile_common)
 find_package(catkin REQUIRED COMPONENTS
 std_msgs
 message_generation
+actionlib_msgs
 )
 
 ## System dependencies are found with CMake's conventions
@@ -46,11 +47,7 @@ message_generation
 ##   * add every package in MSG_DEP_SET to generate_messages(DEPENDENCIES ...)
 
 ## Generate messages in the 'msg' folder
- add_message_files(
-   FILES
-   Tactile.msg
-   TactileStamped.msg
- )
+add_message_files(DIRECTORY msg)
 
 ## Generate services in the 'srv' folder
 # add_service_files(
@@ -65,11 +62,13 @@ message_generation
 #   Action1.action
 #   Action2.action
 # )
+add_action_files(DIRECTORY action)
 
 ## Generate added messages and services with any dependencies listed here
  generate_messages(
    DEPENDENCIES
-   std_msgs  # Or other packages containing msgs
+   std_msgs
+   actionlib_msgs
  )
 
 ################################################
@@ -104,7 +103,7 @@ message_generation
 catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES sun_tactile_common
-  CATKIN_DEPENDS message_runtime std_msgs
+  CATKIN_DEPENDS message_runtime std_msgs actionlib_msgs
 #  DEPENDS system_lib
 )
 

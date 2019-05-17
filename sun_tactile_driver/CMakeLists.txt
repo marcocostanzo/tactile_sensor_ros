@@ -14,6 +14,7 @@ sun_tactile_common
 serial
 sun_systems_lib
 sun_learning_lib
+actionlib
 )
 
 ## System dependencies are found with CMake's conventions
@@ -243,6 +244,15 @@ add_executable(rotate_force
 )
 add_dependencies(rotate_force ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 target_link_libraries(rotate_force
+  ${catkin_LIBRARIES}
+)
+#########################################
+#########################################
+add_executable(remove_bias
+  src/remove_bias_node.cpp
+)
+add_dependencies(remove_bias ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(remove_bias
   ${catkin_LIBRARIES}
 )
 #########################################
