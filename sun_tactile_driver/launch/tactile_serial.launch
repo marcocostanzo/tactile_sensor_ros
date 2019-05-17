@@ -23,8 +23,8 @@
 
       <param name="serial_timeout" type="string" value="$(arg serial_timeout)"/>
 
-      <param name="rows" type="string" value="$(arg rows)"/>
-      <param name="cols" type="string" value="$(arg cols)"/>
+      <param name="rows" value="$(arg rows)"/>
+      <param name="cols" value="$(arg cols)"/>
 
       <param name="frame_id" type="string" value="$(arg frame_id)"/>
 

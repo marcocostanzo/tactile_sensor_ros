@@ -12,103 +12,58 @@
 
   <arg name="frame_id" default="fingertip0" />
 
-  <arg name="voltage_topic" default="tactile_voltage" />
+  <arg name="voltage_raw_topic" default="tactile_voltage/raw" />
 
-  <arg name="cut_freq_filter_voltage" default="20.0" />
-  <arg name="rate_filter_voltage" default="500.0" />
+  <arg name="voltage_rect_topic" default="tactile_voltage/rect" />
+
+  <arg name="action_compute_bias" default="tactile_voltage/action_compute_bias" />
 
   <!-- Insert here finger ID [e.g. #F001-28A] | You MUST provide a calibration folder in <pkg-name>/Finger_files-->
   <arg name="finger_code" default="#H003_resina" />
+
   <arg name="wrench_topic" default="wrench" />
-  <arg name="remove_bias_srv" default="remove_bias" />
-
-  <arg name="cut_freq_filter_wrench" default="20.0" />
-  <arg name="rate_filter_wrench" default="500.0" />
-
-  <arg name="contact_wrench_topic" default="contact_wrench"/>
-  <arg name="centroid_topic" default="centroid"/>
 
   
   <node name="read_tactile_serial"  pkg="sun_tactile_driver" type="read_tactile_serial" output="screen">
 
-      <param name="serial_port" type="string" value="$(arg serial_port)"/>
+    <param name="serial_port" type="string" value="$(arg serial_port)"/>
 
-      <param name="baud_rate" type="string" value="$(arg baud_rate)"/>
+    <param name="baud_rate" type="string" value="$(arg baud_rate)"/>
 
-      <param name="serial_timeout" type="string" value="$(arg serial_timeout)"/>
+    <param name="serial_timeout" type="string" value="$(arg serial_timeout)"/>
 
-      <param name="rows" type="string" value="$(arg rows)"/>
-      <param name="cols" type="string" value="$(arg cols)"/>
+    <param name="rows" value="$(arg rows)"/>
+    <param name="cols" value="$(arg cols)"/>
 
-      <param name="frame_id" type="string" value="$(arg frame_id)"/>
+    <param name="frame_id" type="string" value="$(arg frame_id)"/>
 
-      <param name="output_topic" type="string" value="$(arg voltage_topic)/raw"/>
-
-  </node>
-
-<!--
-  <node name="filter_tactile" pkg="sun_tactile_driver" type="filter_tactile" output="screen">
-
-    <param name="in_topic" type="string" value="$(arg voltage_topic)/raw"/>
-
-    <param name="out_topic" type="string" value="$(arg voltage_topic)/filter"/>
-    
-    <param name="num_voltages" type="int" value="$(eval arg('rows') * arg('cols'))"/>
-
-    <param name="cut_freq" value="$(arg cut_freq_filter_voltage)"/>
-
-    <param name="rate" value="$(arg rate_filter_voltage)"/>
+    <param name="output_topic" type="string" value="$(arg voltage_raw_topic)"/>
 
   </node>
--->
+
+  <node name="remove_bias"  pkg="sun_tactile_driver" type="remove_bias" output="screen">
+
+    <param name="in_voltage_topic" type="string" value="$(arg voltage_raw_topic)"/>
+
+    <param name="out_voltage_topic" type="string" value="$(arg voltage_rect_topic)"/>
+
+    <param name="action_compute_bias" type="string" value="$(arg action_compute_bias)"/>
+
+    <param name="default_num_samples" value="50"/>
+
+    <param name="num_voltages" value="$(eval arg('cols') * arg('rows'))"/>
+
+  </node>
 
   <node name="read_wrench" pkg="sun_tactile_driver" type="read_wrench" output="screen">
 
     <!-- Insert here finger ID [#A123-45B] | You MUST provide a calibration folder in <pkg-name>/Finger_files-->
     <param name="fingerCode" type="string" value="$(arg finger_code)"/>
 
-    <param name="in_voltage_topic" type="string" value="$(arg voltage_topic)/raw"/>
-
-    <param name="voltage_rect_topic" type="string" value="$(arg voltage_topic)/rect"/>
+    <param name="in_voltage_topic" type="string" value="$(arg voltage_rect_topic)"/>
 
     <param name="wrench_topic" type="string" value="$(arg wrench_topic)"/>
-
-    <param name="service_remove_bias" type="string" value="$(arg remove_bias_srv)"/>
 	
-  </node>
-
-
-  <node name="filter_wrench" pkg="sun_utils" type="filter_wrench_stamped" output="screen">
-
-    <param name="in_topic" type="string" value="$(arg wrench_topic)"/>
-
-    <param name="out_topic" type="string" value="$(arg wrench_topic)/filter"/>
-
-    <param name="cut_freq" value="$(arg cut_freq_filter_wrench)"/>
-
-    <param name="rate" value="$(arg rate_filter_wrench)"/>
-
-  </node>
-
-  <node name="rotate_force" pkg="sun_tactile_driver" type="rotate_force" output="screen">
-
-    <param name="voltages_topic" type="string" value="$(arg voltage_topic)/rect"/>
-
-    <param name="in_force_topic" type="string" value="$(arg wrench_topic)"/>
-
-    <param name="out_force_topic" type="string" value="$(arg contact_wrench_topic)"/>
-
-    <param name="out_centroid_topic" type="string" value="$(arg centroid_topic)"/>
-
-    <param name="radius" value="0.05"/>
-
-    <param name="voltage_thr" value="0.005"/>
-
-    <param name="tmp_distance_sensor_sphere" value="-0.02"/>
-
-    <param name="cell_distance_coeff" value="0.007"/>
-    
-
   </node>
 
 

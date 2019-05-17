@@ -179,6 +179,19 @@ void executeComputeBiasCB( const sun_tactile_common::ComputeBiasGoalConstPtr &go
 
 }
 
+void waitForVoltage(){
+
+    ros::NodeHandle nh_public;
+    ros::Subscriber subVoltage = nh_public.subscribe( in_voltage_topic_str, 1, readV);
+
+    b_msg_arrived = false;
+    while(!b_msg_arrived){
+        sleep(TIME_TO_SLEEP_WAITING_SAMPLE);
+        ros::spinOnce();
+    }
+
+}
+
 int main(int argc, char *argv[])
 {
     
@@ -195,7 +208,7 @@ int main(int argc, char *argv[])
     nh_private.param("out_voltage_topic" , out_voltage_topic_str, string("tactile_voltage/rect") );
     //Action compute bias
     string action_compute_bias_str;
-    nh_private.param("action_compute_bias" , action_compute_bias_str, string("tactile_voltage/compute_bias") );
+    nh_private.param("action_compute_bias" , action_compute_bias_str, string("tactile_voltage/action_compute_bias") );
     //Default num samples to use in bias calculation
     nh_private.param("default_num_samples" , default_num_samples_to_use, 50 );
     //Voltages count
@@ -204,6 +217,9 @@ int main(int argc, char *argv[])
     //resize vectors
     bias.resize(NUM_V);
     raw_valtages.resize(NUM_V);
+
+    cout << HEADER_PRINT YELLOW "Waiting for voltages..." CRESET << endl;
+    waitForVoltage();
 
     //FIRST COMPUTATION OF BIAS
     {
