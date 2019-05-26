@@ -21,6 +21,8 @@
 
 <arg name="grasp_force_topic" default="grasp_force"/>
 
+<arg name="compute_bias_action" default="compute_bias_action" />
+
     <group ns="$(arg namespace_finger0)">
         <include file="$(find sun_tactile_driver)/launch/read_wrench.launch">
 
@@ -29,6 +31,8 @@
             <arg name="frame_id" value="$(arg frame_id_finger0)" />
 
             <arg name="finger_code" value="$(arg finger0_code)" />
+
+            <arg name="action_compute_bias" value="$(arg compute_bias_action)" />
     
         </include>
     </group>
@@ -41,6 +45,8 @@
             <arg name="frame_id" value="$(arg frame_id_finger1)" />
 
             <arg name="finger_code" value="$(arg finger1_code)" />
+
+            <arg name="action_compute_bias" value="$(arg compute_bias_action)" />
     
         </include>
     </group>
