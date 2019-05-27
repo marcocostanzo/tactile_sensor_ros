@@ -112,7 +112,7 @@ bool computeBias(int num_samples_to_use, bool b_from_as = false){
                 return false;
             }
             wait_count++;
-            sleep(TIME_TO_SLEEP_WAITING_SAMPLE);
+            ros::Duration(TIME_TO_SLEEP_WAITING_SAMPLE).sleep();
             ros::spinOnce();
         }
     }
@@ -120,7 +120,7 @@ bool computeBias(int num_samples_to_use, bool b_from_as = false){
     //Initializate bias to zero
     vector<double> bias_;
     for( int i=0; i<NUM_V; i++ )
-        bias.push_back(0.0);
+        bias_.push_back(0.0);
 
     //Collect Samples for bias computation
     for( int i=0; i<num_samples_to_use; i++ ){
@@ -132,14 +132,14 @@ bool computeBias(int num_samples_to_use, bool b_from_as = false){
                 return false;
             }
             wait_count++;
-            sleep(TIME_TO_SLEEP_WAITING_SAMPLE);
+            ros::Duration(TIME_TO_SLEEP_WAITING_SAMPLE).sleep();
             ros::spinOnce();
         }
         for( int i=0; i<NUM_V; i++ )
             bias_[i] += raw_valtages[i];
         if(b_from_as){
             sun_tactile_common::ComputeBiasFeedback msg_feedbk;
-            msg_feedbk.samples_left = i-num_samples_to_use;
+            msg_feedbk.samples_left = num_samples_to_use-i-1;
             compute_bias_as->publishFeedback(msg_feedbk);
         }
     }
@@ -148,7 +148,7 @@ bool computeBias(int num_samples_to_use, bool b_from_as = false){
     for( int i=0; i<NUM_V; i++ )
         bias[i] = bias_[i]/num_samples_to_use;
 
-    cout << HEADER_PRINT BOLDYELLOW "Computing BIAS..." GREEN " DONE!" << endl;
+    cout << HEADER_PRINT BOLDYELLOW "Computing BIAS..." GREEN " DONE!" CRESET << endl;
 
     return true;
 
@@ -185,8 +185,8 @@ void waitForVoltage(){
     ros::Subscriber subVoltage = nh_public.subscribe( in_voltage_topic_str, 1, readV);
 
     b_msg_arrived = false;
-    while(!b_msg_arrived){
-        sleep(TIME_TO_SLEEP_WAITING_SAMPLE);
+    while(ros::ok() && !b_msg_arrived){
+        ros::Duration(TIME_TO_SLEEP_WAITING_SAMPLE).sleep();
         ros::spinOnce();
     }
 
