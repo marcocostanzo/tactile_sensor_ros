@@ -49,7 +49,7 @@
 
     <param name="action_compute_bias" type="string" value="$(arg action_compute_bias)"/>
 
-    <param name="default_num_samples" value="50"/>
+    <param name="default_num_samples" value="100"/>
 
     <param name="num_voltages" value="$(eval arg('cols') * arg('rows'))"/>
 

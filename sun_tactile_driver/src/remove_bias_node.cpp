@@ -210,7 +210,7 @@ int main(int argc, char *argv[])
     string action_compute_bias_str;
     nh_private.param("action_compute_bias" , action_compute_bias_str, string("tactile_voltage/action_compute_bias") );
     //Default num samples to use in bias calculation
-    nh_private.param("default_num_samples" , default_num_samples_to_use, 50 );
+    nh_private.param("default_num_samples" , default_num_samples_to_use, 100 );
     //Voltages count
     nh_private.param("num_voltages" , NUM_V, 25 );
 
