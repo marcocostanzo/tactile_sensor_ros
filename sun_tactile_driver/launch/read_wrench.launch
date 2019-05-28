@@ -19,7 +19,7 @@
   <arg name="action_compute_bias" default="tactile_voltage/action_compute_bias" />
 
   <!-- Insert here finger ID [e.g. #F001-28A] | You MUST provide a calibration folder in <pkg-name>/Finger_files-->
-  <arg name="finger_code" default="#H003_resina" />
+  <arg name="finger_code" default="#H003_rigid" />
 
   <arg name="wrench_topic" default="wrench" />
 
