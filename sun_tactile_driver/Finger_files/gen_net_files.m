@@ -1,78 +1,128 @@
 clear all,close all,clc
 
-%system('rm *.txt');
+output_file = 'NET_FILE';
 
-load('H004_denkmit_NET_90  90  90  90  90  90_decim_5')
-%load net3025_fs50_05_09
+load('H004_rigid_NET_89  89  89  89  89  89_decim_11')
+
+%% Extract net
 net = train_out.net;
-settings_i = train_out.settings_i;
-settings_t = train_out.settings_t;
 
-
-numLayers = net.numLayers;
-
-sizeLayers = zeros(numLayers,1);
-
+%Case of bad cells
 try
 remove = net.inputs{1}.processSettings{1}.remove;
 catch
    remove = []; 
 end
 
-for jj = 0:(numLayers-1)
-    
-    if(jj==0)
-       W = net.IW{1};
-       for(uu = remove)
-          W = [W(:,1:remove-1) , zeros(size(W,1),1) , W(:,remove:end)]; 
+W_cell = {};
+b_cell = {};
+activation_fun_cell = {};
+
+%For all the layers
+for jj = 1:net.numLayers
+   
+    %Input Layer
+    if(jj==1)
+       W_tmp = net.IW{1};
+       for uu = remove
+          W_tmp = [W_tmp(:,1:remove-1) , zeros(size(W_tmp,1),1) , W_tmp(:,remove:end)]; 
        end
-       dimInput = size(W,2);
+       W_cell{1} = W_tmp;
     else
-       W = net.LW{jj+1,jj}; 
+       W_cell{jj} = net.LW{jj,jj-1}; 
     end
     
-    b = net.b{jj+1};
+    b_cell{jj} = net.b{jj};
     
-    sizeLayers(jj+1) = length(b);
-    
-    eval(['save -ascii -double W' num2str(jj) '.txt W'])
-    eval(['save -ascii -double b' num2str(jj) '.txt b'])
+    activation_fun_cell{jj} = net.layers{jj}.transferFcn;
     
 end
 
+%% Fix min max remove
+train_out.settings_i.xmin(remove) = -1;
+train_out.settings_i.xmax(remove) = 1;
+
+%% File
+
+NO_LAYER_CODE = 0;
+PCA_LAYER_CODE = 1;
+MAPMINMAX_LAYER_CODE = 2;
+MAPMINMAX_REVERSE_LAYER_CODE = 3;
+FULLY_CONNECTED_LAYER_CODE = 4;
+
+SIGMOID_FUNCTION_CODE = 1;
+LINEAR_FUNCTION_CODE = 2;
 
 
-mMi = double([settings_i.xmin settings_i.xmax]);
-mMi(remove,1) = -1;
-mMi(remove,2) = 1;
-save -ascii -double mM_i.txt mMi
+print_format = '%.10E\n';
 
-mMo = double([settings_t.xmin settings_t.xmax]);
-save -ascii -double mM_o.txt mMo
+fid = fopen([output_file '.txt'], 'wt');
 
-fileID = fopen('meta.txt','w');
-fprintf(fileID,'%d\n', numLayers);
-fprintf(fileID,'%d\n', dimInput);
-fclose(fileID);
-
-fileID = fopen('sizeLayers.txt','w');
-for ii = 1:numLayers
-    fprintf(fileID,'%d\n', sizeLayers(ii));
-end
-fclose(fileID);
-
-fileID = fopen('pca.txt','w');
+%% First Layer is pca?
 if train_out.pca
-    fprintf(fileID,'%d\n', size(train_out.Ureduce,2));
-    fclose(fileID);
-    pca_mean = train_out.pca_mean;
-    save -ascii -double pca_mean.txt pca_mean
-    Ureduce = train_out.Ureduce;
-    save -ascii -double Ureduce.txt Ureduce
-else
-    fprintf(fileID,'%d\n', 0);
-    fclose(fileID);
+   %Code PCA
+   fprintf(fid, print_format,  PCA_LAYER_CODE  );
+   %NumElements of pca_mean = size of input
+   fprintf(fid, print_format,  numel(train_out.pca_mean) );
+   %NumCols of Ureduce = NumRows of Ureduce.T() = size of output
+   fprintf(fid, print_format,  size(train_out.Ureduce,2) );
+   %pca_mean
+   fprintf(fid, print_format,  train_out.pca_mean );
+   %Ureduce (fprintf is column-w so i will transpose)
+   fprintf(fid, print_format,  train_out.Ureduce' );
 end
 
+%% MapMinMax Inputs
+%Code MapMinMax
+fprintf(fid, '%.10E\n',  MAPMINMAX_LAYER_CODE  );
+%Num Elements
+fprintf(fid, '%.10E\n',  numel(train_out.settings_i.xmin)  );
+%Min
+fprintf(fid, '%.10E\n',  train_out.settings_i.xmin );
+%Max
+fprintf(fid, '%.10E\n',  train_out.settings_i.xmax  );
 
+%% Fully Connected Layers
+for i=1:numel(W_cell)
+    
+    %Code FULLY_CONNECTED_LAYER
+    fprintf(fid, '%.10E\n',  FULLY_CONNECTED_LAYER_CODE  );
+    %Size Input
+    fprintf(fid, '%.10E\n',  size(W_cell{i},2)  );
+    %Num Neurons
+    fprintf(fid, '%.10E\n',  size(W_cell{i},1)  );
+    %Activation Function Type
+    switch activation_fun_cell{i}
+        case 'tansig'
+            %Sigmoid
+            fprintf(fid, '%.10E\n',  SIGMOID_FUNCTION_CODE  );
+        case 'purelin'
+            %Linear
+            fprintf(fid, '%.10E\n',  LINEAR_FUNCTION_CODE  );
+        otherwise
+            fclose(fid);
+            error(['Non valid activation fun ', activation_fun_cell{i} ])
+    end
+    
+    %w (fprintf is column-w so i will transpose)
+    fprintf(fid, print_format,  W_cell{i}' );
+    %bias
+    fprintf(fid, print_format,  b_cell{i} );
+    
+end
 
+%% MapMinMax Reverse
+%Code MapMinMax
+fprintf(fid, '%.10E\n',  MAPMINMAX_REVERSE_LAYER_CODE  );
+%Num Elements
+fprintf(fid, '%.10E\n',  numel(train_out.settings_t.xmin)  );
+%Min
+fprintf(fid, '%.10E\n',  train_out.settings_t.xmin );
+%Max
+fprintf(fid, '%.10E\n',  train_out.settings_t.xmax  );
+
+%% End Code
+%Code MapMinMax
+fprintf(fid, '%.10E\n',  NO_LAYER_CODE  );
+
+fclose(fid);

@@ -29,9 +29,33 @@
 
 #include <ros/package.h>
 
+#include <ANN/ANN_File_Reader.h>
 
-//------new
-#include <ANN/ANN.h>
+#ifndef SUN_COLORS
+#define SUN_COLORS
+
+/* ======= COLORS ========= */
+#define CRESET   "\033[0m"
+#define BLACK   "\033[30m"      /* Black */
+#define RED     "\033[31m"      /* Red */
+#define GREEN   "\033[32m"      /* Green */
+#define YELLOW  "\033[33m"      /* Yellow */
+#define BLUE    "\033[34m"      /* Blue */
+#define MAGENTA "\033[35m"      /* Magenta */
+#define CYAN    "\033[36m"      /* Cyan */
+#define WHITE   "\033[37m"      /* White */
+#define BOLD    "\033[1m"       /* Bold */
+#define BOLDBLACK   "\033[1m\033[30m"      /* Bold Black */
+#define BOLDRED     "\033[1m\033[31m"      /* Bold Red */
+#define BOLDGREEN   "\033[1m\033[32m"      /* Bold Green */
+#define BOLDYELLOW  "\033[1m\033[33m"      /* Bold Yellow */
+#define BOLDBLUE    "\033[1m\033[34m"      /* Bold Blue */
+#define BOLDMAGENTA "\033[1m\033[35m"      /* Bold Magenta */
+#define BOLDCYAN    "\033[1m\033[36m"      /* Bold Cyan */
+#define BOLDWHITE   "\033[1m\033[37m"      /* Bold White */
+/*===============================*/
+
+#endif
 
 using namespace std;
 using namespace TooN;
@@ -41,11 +65,7 @@ const int NUM_V = 25; //Length of voltage Vector
 Vector<NUM_V> voltages = Zeros;
 Vector<6> wrench = Zeros;
 string fingerCode("");
-ANN * myANN;
-bool b_pca = false;
-Vector<NUM_V> pca_mean;
-Vector<>* volt_reduce;
-Matrix<>* Ureduce;
+std::unique_ptr<ANN> ann;
 string in_voltage_topic_str;
 //*******GLOBAL ROS VARS******//
 ros::NodeHandle* nh_public;
@@ -77,17 +97,9 @@ void readV( const sun_tactile_common::TactileStamped::ConstPtr& msg  ){
     
 	for(int i = 0; i<NUM_V; i++){
 		voltages[i] = msg->tactile.data[i];
-	}
-    
-    //Calculate wrench model
-    if(b_pca){
-        Vector<NUM_V> votages_pca_mean = voltages - pca_mean;
-		//((*Ureduce).T())*votages_pca_mean;
-        *volt_reduce = ((*Ureduce).T())*votages_pca_mean;
-        wrench = myANN->compute( *volt_reduce );
-    } else {
-        wrench = myANN->compute( voltages );
-    }       
+	}  
+
+    wrench = ann->compute(voltages);    
 
     //Fill ROS msgs
     msgWrench.header.stamp = msg->header.stamp;
@@ -141,7 +153,7 @@ int main(int argc, char *argv[]){
     
     //name_space = ros::this_node::getNamespace();
 
-    cout << BOLDBLUE << "Finger " << fingerCode << endl;
+    cout << BOLDBLUE << "Finger " << fingerCode << CRESET << endl;
     /*************************************************/
 
     /*******INIT ROS PUB**********/
@@ -185,23 +197,6 @@ void init_model(string path){
 
 void init_ANN_model( string path ){
 
-		myANN = new ANN ( path );
-
-        string pca_meta_path = path + "/pca.txt";
-        Vector<1> pca_meta = readFileV(pca_meta_path.c_str(),1);
-
-        if(pca_meta[0] > 0){
-            b_pca = true;
-
-            string pca_mean_path = path + "/pca_mean.txt";
-            pca_mean = readFileV(pca_mean_path.c_str(),NUM_V);
-
-            string Ureduce_path = path + "/Ureduce.txt";
-            Ureduce = new Matrix<>(readFileM(Ureduce_path.c_str(),NUM_V,pca_meta[0]));
-            volt_reduce = new Vector<>(Zeros(pca_meta[0]));
-
-        } else {
-            b_pca = false;
-        }
+        ann = std::unique_ptr<ANN>( new ANN( readANNFile( path + "/NET_FILE.txt" ) ) );
 
 }
