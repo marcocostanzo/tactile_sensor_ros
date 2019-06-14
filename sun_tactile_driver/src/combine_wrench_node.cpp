@@ -20,7 +20,7 @@
 #include <ros/ros.h>
 
 #include <geometry_msgs/WrenchStamped.h>
-#include <std_msgs/Float64.h>
+#include <sun_ros_msgs/Float64Stamped.h>
 
 #include <TooN/TooN.h>
 
@@ -41,7 +41,7 @@ ros::Publisher pubGraspForce;
 //----------------------------//
 //**********MSGS*************//
 geometry_msgs::WrenchStamped totalWrench_msg;
-std_msgs::Float64 graspFroce_msg;
+sun_ros_msgs::Float64Stamped graspFroce_msg;
 //====================================//
 
 
@@ -81,7 +81,7 @@ void readWrench1( const geometry_msgs::WrenchStamped::ConstPtr& msg ){
 }
 
 double distance_offset;
-void readDistance( const std_msgs::Float64::ConstPtr& msg ){
+void readDistance( const sun_ros_msgs::Float64Stamped::ConstPtr& msg ){
 	 
 	double distance = ((msg->data)/2.0)+distance_offset;
 
@@ -138,7 +138,7 @@ int main(int argc, char *argv[]){
     /*******INIT ROS PUB**********/
     //Force pub
 	pubWrench = nh_public.advertise<geometry_msgs::WrenchStamped>( out_topic_str, 1);
-	pubGraspForce = nh_public.advertise<std_msgs::Float64>( grasp_force_topic_str, 1); 
+	pubGraspForce = nh_public.advertise<sun_ros_msgs::Float64Stamped>( grasp_force_topic_str, 1); 
     /***************************/
 
 	totalWrench_msg.header.frame_id = frame_id;
@@ -202,6 +202,7 @@ void updateWrench(){
     totalWrench_msg.wrench.torque.z = trWrench0.wrench.torque.z + trWrench1.wrench.torque.z;
 
 	graspFroce_msg.data = fabs(fz0 + fz1);
+    graspFroce_msg.header = totalWrench_msg.header;
 
     pubWrench.publish(totalWrench_msg);
 	pubGraspForce.publish(graspFroce_msg);

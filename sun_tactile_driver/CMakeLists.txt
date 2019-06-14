@@ -15,6 +15,7 @@ serial
 sun_systems_lib
 sun_learning_lib
 actionlib
+sun_ros_msgs
 )
 
 ## System dependencies are found with CMake's conventions
@@ -253,6 +254,15 @@ add_executable(remove_bias
 )
 add_dependencies(remove_bias ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 target_link_libraries(remove_bias
+  ${catkin_LIBRARIES}
+)
+#########################################
+#########################################
+add_executable(evaluate_real_rate
+  src/evaluate_real_rate_node.cpp
+)
+add_dependencies(evaluate_real_rate ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(evaluate_real_rate
   ${catkin_LIBRARIES}
 )
 #########################################
