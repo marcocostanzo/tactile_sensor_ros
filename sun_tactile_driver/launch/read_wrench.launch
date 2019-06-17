@@ -23,6 +23,11 @@
 
   <arg name="wrench_topic" default="wrench" />
 
+  <arg name="bool_filter_voltage" default="true" />
+  <arg name="voltage_raw_filter_topic" default="$(arg voltage_raw_topic)_filter" />
+  <arg name="filter_voltage_cut_freq" default="300.0" />
+  <arg name="filter_voltage_rate" default="600.0" />
+
   
   <node name="read_tactile_serial"  pkg="sun_tactile_driver" type="read_tactile_serial" output="screen">
 
@@ -41,9 +46,23 @@
 
   </node>
 
+  <node if="$(arg bool_filter_voltage)" name="filter_tactile"  pkg="sun_tactile_driver" type="filter_tactile" output="screen">
+
+    <param name="num_voltages" value="$(eval arg('cols') * arg('rows'))"/>
+
+    <param name="in_topic" type="string" value="$(arg voltage_raw_topic)"/>
+
+    <param name="out_topic" type="string" value="$(arg voltage_raw_filter_topic)"/>
+
+    <param name="cut_freq" value="$(arg filter_voltage_cut_freq)"/>
+    <param name="rate" value="$(arg filter_voltage_rate)"/>
+
+  </node>
+
   <node name="remove_bias"  pkg="sun_tactile_driver" type="remove_bias" output="screen">
 
-    <param name="in_voltage_topic" type="string" value="$(arg voltage_raw_topic)"/>
+    <param name="in_voltage_topic" type="string" value="$(arg voltage_raw_topic)" unless="$(arg bool_filter_voltage)"/>
+    <param name="in_voltage_topic" type="string" value="$(arg voltage_raw_filter_topic)" if="$(arg bool_filter_voltage)"/>
 
     <param name="out_voltage_topic" type="string" value="$(arg voltage_rect_topic)"/>
 
