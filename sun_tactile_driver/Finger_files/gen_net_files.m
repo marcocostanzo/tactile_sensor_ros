@@ -1,4 +1,8 @@
-clear all,close all,clc
+clear all, close all, clc
+
+%Insert here cells removed before the train process
+%This vector must be sorted
+removed_cells = [];
 
 output_file = 'NET_FILE';
 
@@ -60,6 +64,11 @@ fid = fopen([output_file '.txt'], 'wt');
 
 %% First Layer is pca?
 if train_out.pca
+   %removed cells
+   for c = removed_cells
+       train_out.pca_mean = [train_out.pca_mean(1:c-1); 0; train_out.pca_mean(c:end) ];
+       train_out.Ureduce = [train_out.Ureduce(1:c-1,:); zeros(1,size(train_out.Ureduce,2)); train_out.Ureduce(c:end,:)];
+   end
    %Code PCA
    fprintf(fid, print_format,  PCA_LAYER_CODE  );
    %NumElements of pca_mean = size of input
