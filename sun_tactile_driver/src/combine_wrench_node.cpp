@@ -201,7 +201,7 @@ void updateWrench(){
     totalWrench_msg.wrench.torque.y = trWrench0.wrench.torque.y + trWrench1.wrench.torque.y;
     totalWrench_msg.wrench.torque.z = trWrench0.wrench.torque.z + trWrench1.wrench.torque.z;
 
-	graspFroce_msg.data = fabs(fz0 + fz1);
+	graspFroce_msg.data = 2.0*min(fabs(fz0),fabs(fz1));
     graspFroce_msg.header = totalWrench_msg.header;
 
     pubWrench.publish(totalWrench_msg);
