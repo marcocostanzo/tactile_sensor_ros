@@ -186,6 +186,8 @@ geometry_msgs::WrenchStamped trWrench( const geometry_msgs::WrenchStamped::Const
 
     if(msg->header.stamp > totalWrench_msg.header.stamp)
         totalWrench_msg.header.stamp = msg->header.stamp;
+    else
+        totalWrench_msg.header.stamp += ros::Duration(1.0E-6);
 
     return outMsg;
 
