@@ -35,6 +35,14 @@
 
 using namespace std;
 
+void set_serial_low_latency(const string& serial_port)
+{
+  cout << "Setting low_latency for " << WARN_COLOR << serial_port << CRESET << endl;
+  string command = "setserial " + serial_port + " low_latency";
+  int result = system(command.c_str());
+  cout << "Setting low_latency for " << WARN_COLOR << serial_port << CRESET << " result:" << WARN_COLOR << result << CRESET << endl;
+}
+
 
 //==============MAIN================//
 
@@ -64,6 +72,7 @@ int main(int argc, char *argv[]){
     nh_private.param("output_topic" , topic_name, string("/tactile") );
 
     /*** INIT SERIAL ****/	
+    set_serial_low_latency(serial_port);
     serial::Serial my_serial(serial_port, baud, serial::Timeout::simpleTimeout(serialTimeout));
 
    /*** CHECK ***/
