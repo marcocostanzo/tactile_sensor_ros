@@ -2,7 +2,7 @@
 
   <arg name="serial_port" default="/dev/ttyUSB0" />
 
-  <arg name="baud_rate" default="500000" />
+  <arg name="baud_rate" default="1000000" />
 
   <arg name="serial_timeout" default="1000" />
 
