@@ -13,6 +13,7 @@
 
 <arg name="finger0_code" default="#F001_rigid" />
 <arg name="finger1_code" default="#F002_rigid" />
+<arg name="fingers_boud_rate" default="1000000" />
 
 <arg name="finger_distance_topic" default="distance"/>
 <arg name="finger_distance_offset" default="0.0"/>
@@ -32,6 +33,8 @@
 
             <arg name="finger_code" value="$(arg finger0_code)" />
 
+            <arg name="baud_rate" value="$(arg fingers_boud_rate)" />
+
             <arg name="action_compute_bias" value="$(arg compute_bias_action)" />
     
         </include>
@@ -45,6 +48,8 @@
             <arg name="frame_id" value="$(arg frame_id_finger1)" />
 
             <arg name="finger_code" value="$(arg finger1_code)" />
+
+            <arg name="baud_rate" value="$(arg fingers_boud_rate)" />
 
             <arg name="action_compute_bias" value="$(arg compute_bias_action)" />
     
