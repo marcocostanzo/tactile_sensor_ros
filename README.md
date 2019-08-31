@@ -42,11 +42,11 @@ It has the following parameters:
 | `serial_port`  | Device file associated with the finger  | `/dev/ttyUSB0` |
 | `baud_rate`  | Baud rate for serial communication. **For the wired fingers it has to be 1000000**.  | `1000000` |
 | `voltage_raw_topic` | Output topic for the raw voltages | `tactile_voltage/raw` |
-| `voltage_rect_topic` | Output topic for the de-biased voltages | `tactile_voltage/rect"` |
+| `voltage_rect_topic` | Output topic for the de-biased voltages | `tactile_voltage/rect` |
 | `action_compute_bias` | Action name that computes the bias* | `tactile_voltage/action_compute_bias` |
 
 *the bias si computed at startup, you can force a new computation calling this action.
 
 ## License
 
-This project is licensed under the GPLv3 License - see the [LICENSE.md](LICENSE.md) file for details
+This project is licensed under the GNUv3 License - see the [LICENSE](LICENSE) file for details
