@@ -52,10 +52,6 @@
 
   <build_depend>sun_tactile_common</build_depend>
   <build_depend>serial</build_depend>
-  <build_depend>sun_systems_lib</build_depend>
-  <build_depend>sun_learning_lib</build_depend>
-  <build_depend>sun_ros_msgs</build_depend>
-
 
   <!-- The export tag contains other, unspecified, tags -->
   <export>

@@ -12,10 +12,7 @@ roscpp
 roslib
 sun_tactile_common
 serial
-sun_systems_lib
-sun_learning_lib
 actionlib
-sun_ros_msgs
 )
 
 ## System dependencies are found with CMake's conventions
@@ -209,42 +206,6 @@ add_executable(read_tactile_serial
 )
 add_dependencies(read_tactile_serial ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 target_link_libraries(read_tactile_serial
-  ${catkin_LIBRARIES}
-)
-#########################################
-#########################################
-add_executable(filter_tactile
-  src/filter_tactile_node.cpp
-)
-add_dependencies(filter_tactile ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
-target_link_libraries(filter_tactile
-  ${catkin_LIBRARIES}
-)
-#########################################
-#########################################
-add_executable(read_wrench
-  src/read_wrench_node.cpp
-)
-add_dependencies(read_wrench ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
-target_link_libraries(read_wrench
-  ${catkin_LIBRARIES}
-)
-#########################################
-#########################################
-add_executable(combine_wrench
-  src/combine_wrench_node.cpp
-)
-add_dependencies(combine_wrench ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
-target_link_libraries(combine_wrench
-  ${catkin_LIBRARIES}
-)
-#########################################
-#########################################
-add_executable(rotate_force
-  src/rotate_force_node.cpp
-)
-add_dependencies(rotate_force ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
-target_link_libraries(rotate_force
   ${catkin_LIBRARIES}
 )
 #########################################

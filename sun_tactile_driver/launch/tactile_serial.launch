@@ -12,25 +12,42 @@
 
   <arg name="frame_id" default="fingertip0" />
 
-  <arg name="output_topic" default="tactile_voltage" />
+  <arg name="voltage_raw_topic" default="tactile_voltage/raw" />
+
+  <arg name="voltage_rect_topic" default="tactile_voltage/rect" />
+
+  <arg name="action_compute_bias" default="tactile_voltage/action_compute_bias" />
 
   
   <node name="read_tactile_serial"  pkg="sun_tactile_driver" type="read_tactile_serial" output="screen">
 
-      <param name="serial_port" type="string" value="$(arg serial_port)"/>
+    <param name="serial_port" type="string" value="$(arg serial_port)"/>
 
-      <param name="baud_rate" type="string" value="$(arg baud_rate)"/>
+    <param name="baud_rate" type="string" value="$(arg baud_rate)"/>
 
-      <param name="serial_timeout" type="string" value="$(arg serial_timeout)"/>
+    <param name="serial_timeout" type="string" value="$(arg serial_timeout)"/>
 
-      <param name="rows" value="$(arg rows)"/>
-      <param name="cols" value="$(arg cols)"/>
+    <param name="rows" value="$(arg rows)"/>
+    <param name="cols" value="$(arg cols)"/>
 
-      <param name="frame_id" type="string" value="$(arg frame_id)"/>
+    <param name="frame_id" type="string" value="$(arg frame_id)"/>
 
-      <param name="output_topic" type="string" value="$(arg output_topic)"/>
+    <param name="output_topic" type="string" value="$(arg voltage_raw_topic)"/>
+
+  </node>
+
+  <node name="remove_bias"  pkg="sun_tactile_driver" type="remove_bias" output="screen">
+
+    <param name="in_voltage_topic" type="string" value="$(arg voltage_raw_topic)"/>
+
+    <param name="out_voltage_topic" type="string" value="$(arg voltage_rect_topic)"/>
+
+    <param name="action_compute_bias" type="string" value="$(arg action_compute_bias)"/>
+
+    <param name="default_num_samples" value="100"/>
+
+    <param name="num_voltages" value="$(eval arg('cols') * arg('rows'))"/>
 
   </node>
 
 </launch>
-
