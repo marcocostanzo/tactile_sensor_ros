@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+<xacro:macro 
+    name="sun_finger_v3" 
+    params="
+        link_name:=finger_link 
+        scale:=1.0
+        "
+>
+
+<xacro:property name="finger_cad_file" value="package://sun_tactile_simulation/meshes/sun_finger_v3.stl"/>
+<xacro:property name="cad_scale" value="0.001"/>
+<xacro:property name="local_scale" value="${cad_scale*scale}"/>
+<xacro:property name="finger_mesh">
+  <mesh 
+    filename="${finger_cad_file}" 
+    scale="${local_scale} ${local_scale} ${local_scale}"
+  />
+</xacro:property>
+<xacro:property name="mesh_origin">
+  <origin xyz="${-56.9550247192*local_scale} ${-45.514275551*local_scale} ${0.00445556640625*local_scale}" rpy="${pi/2.0} ${0.0} ${pi/2}" />
+</xacro:property>
+<link name="${link_name}">
+    <visual>
+        <xacro:insert_block name="mesh_origin" />
+        <geometry>
+            <xacro:insert_block name="finger_mesh" />
+        </geometry>
+    </visual>
+    <collision>
+        <xacro:insert_block name="mesh_origin" />
+        <geometry>
+            <xacro:insert_block name="finger_mesh" />
+         </geometry>
+     </collision>
+</link>
+</xacro:macro>
+
+</robot>
