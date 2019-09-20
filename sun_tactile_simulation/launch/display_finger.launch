@@ -1,8 +1,8 @@
 <launch>
 
-  <arg name="model" default="$(find test)/urdf/sun_finger_v3.urdf.xacro"/>
+  <arg name="model" default="$(find sun_tactile_simulation)/urdf/sun_finger_v3.urdf.xacro"/>
   <arg name="gui" default="true" />
-  <arg name="rvizconfig" default="$(find test)/rviz/display_finger.rviz" />
+  <arg name="rvizconfig" default="$(find sun_tactile_simulation)/rviz/display_finger.rviz" />
 
   <param name="robot_description" command="$(find xacro)/xacro.py --inorder $(arg model)" />
   <param name="use_gui" value="$(arg gui)"/>
