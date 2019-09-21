@@ -19,7 +19,7 @@
   />
 </xacro:property>
 <xacro:property name="mesh_origin">
-  <origin xyz="${-56.9550247192*local_scale} ${-45.514275551*local_scale} ${0.00445556640625*local_scale}" rpy="${pi/2.0} ${0.0} ${pi/2}" />
+  <!--origin xyz="${-56.9550247192*local_scale} ${-45.514275551*local_scale} ${0.00445556640625*local_scale}" rpy="${pi/2.0} ${0.0} ${pi/2}" /-->
 </xacro:property>
 <link name="${link_name}">
     <visual>
