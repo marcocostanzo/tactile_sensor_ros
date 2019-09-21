@@ -27,6 +27,9 @@
         <geometry>
             <xacro:insert_block name="finger_mesh" />
         </geometry>
+        <material name="blue">
+            <color rgba="0 0 0.8 1"/>
+        </material>
     </visual>
     <collision>
         <xacro:insert_block name="mesh_origin" />
