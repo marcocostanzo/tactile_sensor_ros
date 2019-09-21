@@ -1,12 +1,15 @@
 <launch>
 
-  <arg name="model" default="$(find sun_tactile_simulation)/urdf/wsg50_with_fingerv3.urdf.xacro"/>
+  <arg name="scale" default="1.0"/>
+
+  <arg name="model" default="$(find sun_tactile_simulation)/urdf/wsg50_with_fingerv3.urdf.xacro scale:=$(arg scale)"/>
   <arg name="gui" default="true" />
   <arg name="publish_grasp_frame" default="true" />
   <arg name="rvizconfig" default="$(find sun_tactile_simulation)/rviz/display_wsg50_with_finger.rviz" />
 
   <arg name="pi" value="$(eval pi)"/>
   <arg name="pi_2" value="$(eval pi/2)"/>
+  <arg name="grasp_frame_dz" value="$(eval 0.191486403*arg('scale'))"/>
 
   <param name="robot_description" command="xacro --inorder $(arg model)" />
   <param name="use_gui" value="$(arg gui)"/>
@@ -15,7 +18,7 @@
   <node name="robot_state_publisher" pkg="robot_state_publisher" type="state_publisher"/>
   <node name="rviz" pkg="rviz" type="rviz" args="-d $(arg rvizconfig)" required="true"/>
 
-  <node if="$(arg publish_grasp_frame)" name="grasp_frame_publisher" pkg="tf" type="static_transform_publisher" args="0 0 0.191486403 $(arg pi_2) 0 $(arg pi_2) gripper_roll_link grasp_center 100" /> 
+  <node if="$(arg publish_grasp_frame)" name="grasp_frame_publisher" pkg="tf" type="static_transform_publisher" args="0 0 $(arg grasp_frame_dz) $(arg pi_2) 0 $(arg pi_2) gripper_roll_link grasp_center 100" /> 
 
 
 </launch>

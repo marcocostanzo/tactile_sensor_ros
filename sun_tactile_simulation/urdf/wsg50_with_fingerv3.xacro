@@ -10,13 +10,14 @@
     name="wsg50_with_fingerv3" 
     params="
         name_prefix:=''
+        base_link_name:='gripper_roll_link'
         scale:=1.0
         "
 >
 
 <xacro:wsg50 
     name_prefix="${name_prefix}"
-    roll_link_name="gripper_roll_link" 
+    roll_link_name="${base_link_name}" 
     finger_left_name="finger_left"
     finger_right_name="finger_right"
     scale="${scale}"

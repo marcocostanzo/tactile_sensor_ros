@@ -1,10 +1,13 @@
 <?xml version="1.0"?>
 <robot name="sun_finger_v3" xmlns:xacro="http://www.ros.org/wiki/xacro">
+  
+  <xacro:arg name="scale" default="1.0"/>
 
   <!-- Import finger macro -->
   <xacro:include filename="$(find sun_tactile_simulation)/urdf/wsg50_with_fingerv3.xacro" />
   
-  <xacro:wsg50_with_fingerv3>
-  </xacro:wsg50_with_fingerv3>
+  <xacro:wsg50_with_fingerv3
+    scale="$(arg scale)" 
+  />
 
 </robot>
