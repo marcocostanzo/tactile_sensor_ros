@@ -3,15 +3,14 @@
 
 <!-- WSG50 macro -->
 <xacro:include filename="$(find sun_wsg50_simulation)/urdf/wsg50.xacro" />
-<!-- Import finger macro -->
-<xacro:include filename="$(find sun_tactile_simulation)/urdf/sun_finger_v3.xacro" />
 
 <xacro:macro 
-    name="wsg50_with_fingerv3" 
+    name="wsg50_with_finger" 
     params="
         name_prefix:=''
         base_link_name:='gripper_roll_link'
         scale:=1.0
+        finger_version:=v3
         "
 >
 
@@ -38,10 +37,14 @@
     <origin rpy="0 0 0" xyz="${-0.008777405*scale} ${0*scale} ${0.081460829*scale}"/>
 </joint>
 
-<xacro:sun_finger_v3
-    link_name="${name_prefix}sun_finger_${finger_side}_link" 
-    scale="${scale}"
-/>
+<xacro:if value="${finger_version=='v3'}">
+    <!-- Import finger macro -->
+    <xacro:include filename="$(find sun_tactile_simulation)/urdf/sun_finger_v3.xacro" />
+    <xacro:sun_finger_v3
+        link_name="${name_prefix}sun_finger_${finger_side}_link" 
+        scale="${scale}"
+    />
+</xacro:if>
 
 </xacro:macro> <!-- finger_with_fixed_joint -->
 
