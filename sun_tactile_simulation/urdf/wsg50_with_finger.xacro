@@ -11,6 +11,7 @@
         base_link_name:='gripper_roll_link'
         scale:=1.0
         finger_version:=v3
+        mimic_joints:=true
         "
 >
 
@@ -20,6 +21,7 @@
     finger_left_name="finger_left"
     finger_right_name="finger_right"
     scale="${scale}"
+    mimic_joints="${mimic_joints}"
 />
 
 <xacro:macro 
