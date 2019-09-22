@@ -1,18 +1,7 @@
 <launch>
 
-  <arg name="scale" default="1.0"/>
-  <arg name="finger_version" default="v3"/>
-  <arg name="mimic_joints" default="true" />
-
-  <arg name="model" 
-  default="$(find sun_tactile_simulation)/urdf/wsg50_with_finger.urdf.xacro 
-    scale:=$(arg scale) 
-    finger_version:=$(arg finger_version)
-    mimic_joints:=$(arg mimic_joints)
-    "
-  />
+  <arg name="model" default="$(find sun_tactile_simulation)/urdf/wsg50_with_sunfinger.urdf.xacro"/>
   <arg name="gui" default="true" />
-  <arg name="publish_grasp_frame" default="true" />
   <arg name="rvizconfig" default="$(find sun_tactile_simulation)/rviz/display_wsg50_with_finger.rviz" />
 
   <param name="robot_description" command="xacro --inorder $(arg model)" />
@@ -21,12 +10,5 @@
   <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher"/>
   <node name="robot_state_publisher" pkg="robot_state_publisher" type="state_publisher"/>
   <node name="rviz" pkg="rviz" type="rviz" args="-d $(arg rvizconfig)" required="true"/>
-
-  <include if="$(arg publish_grasp_frame)" file="$(find sun_tactile_simulation)/launch/publish_grasp_frame.launch">
-    <arg name="gripper_base_link" default="gripper_roll_link"/>
-    <arg name="frame_name" default="grasp_center"/>
-    <arg name="scale" default="$(arg scale)"/>
-    <arg name="finger_version" default="$(arg finger_version)"/>
-  </include>
 
 </launch>

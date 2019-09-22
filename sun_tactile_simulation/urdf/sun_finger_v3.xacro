@@ -1,43 +1,70 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
 
+<!--    
+    MACRO to generate finger
+    base_link = name of the link (default base_link)
+    scale = unit scale, 1.0 = [m] (default 1.0)
+    prefix = name to use prefix (default '')
+    create_sensor_link = if true create a link for the sensor frame (default true)
+                         the sensor frame will be ${prefix}sensor_frame
+
+    the finger link will be ${prefix}${base_link}
+-->
 <xacro:macro 
     name="sun_finger_v3" 
-    params="
-        link_name:=finger_link 
+    params=" 
         scale:=1.0
+        base_link:=base_link
+        prefix:=''
+        create_sensor_link:=true
         "
 >
 
-<xacro:property name="finger_cad_file" value="package://sun_tactile_simulation/meshes/sun_finger_v3.stl"/>
-<xacro:property name="cad_scale" value="0.001"/>
-<xacro:property name="local_scale" value="${cad_scale*scale}"/>
-<xacro:property name="finger_mesh">
-  <mesh 
-    filename="${finger_cad_file}" 
-    scale="${local_scale} ${local_scale} ${local_scale}"
-  />
-</xacro:property>
-<xacro:property name="mesh_origin">
-  <!--origin xyz="${-56.9550247192*local_scale} ${-45.514275551*local_scale} ${0.00445556640625*local_scale}" rpy="${pi/2.0} ${0.0} ${pi/2}" /-->
-</xacro:property>
-<link name="${link_name}">
-    <visual>
-        <xacro:insert_block name="mesh_origin" />
-        <geometry>
-            <xacro:insert_block name="finger_mesh" />
-        </geometry>
-        <material name="blue">
-            <color rgba="0 0 0.8 1"/>
-        </material>
-    </visual>
-    <collision>
-        <xacro:insert_block name="mesh_origin" />
-        <geometry>
-            <xacro:insert_block name="finger_mesh" />
-         </geometry>
-     </collision>
-</link>
-</xacro:macro>
+    <!-- cad_scale to convert from cad to [m] -->
+    <xacro:property name="cad_scale" value="0.001"/>
+    <!-- local_scale cad to input scale -->
+    <xacro:property name="local_scale" value="${cad_scale*scale}"/>
+    <!-- origin of mesh wrt link frame -->
+    <xacro:property name="mesh_origin">
+        <!--origin xyz="${-56.9550247192*local_scale} ${-45.514275551*local_scale} ${0.00445556640625*local_scale}" rpy="${pi/2.0} ${0.0} ${pi/2}" /-->
+    </xacro:property>
+
+    <!-- finger link -->
+    <link name="${prefix}${base_link}">
+        <visual>
+            <xacro:insert_block name="mesh_origin" />
+            <geometry>
+                <mesh 
+                    filename="package://sun_tactile_simulation/meshes/visual/sun_finger_v3.stl" 
+                    scale="${local_scale} ${local_scale} ${local_scale}"
+                />
+            </geometry>
+            <material name="blue">
+                <color rgba="0 0 0.8 1"/>
+            </material>
+        </visual>
+        <collision>
+            <xacro:insert_block name="mesh_origin" />
+            <geometry>
+                <mesh 
+                    filename="package://sun_tactile_simulation/meshes/collision/sun_finger_v3.stl" 
+                    scale="${local_scale} ${local_scale} ${local_scale}"
+                />
+            </geometry>
+        </collision>
+    </link> <!-- end finger link -->
+
+    <!-- sensor frame -->
+    <xacro:if value="${create_sensor_link}">
+        <link name="${prefix}sensor_frame" />
+        <joint name="${prefix}${base_link}-sensor_frame" type="fixed">
+            <parent link="${prefix}${base_link}" />
+            <child link="${prefix}sensor_frame" />
+            <origin xyz="${-0.020*scale} 0 ${0.110*scale}" rpy="${pi/2} 0 ${pi/2}" />
+        </joint>
+    </xacro:if>
+
+</xacro:macro> <!-- end finger macro -->
 
 </robot>

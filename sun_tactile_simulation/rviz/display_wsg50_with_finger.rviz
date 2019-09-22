@@ -59,36 +59,48 @@ Visualization Manager:
       Collision Enabled: false
       Enabled: true
       Links:
+        1dof_joint_fake_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
         All Links Enabled: true
         Expand Joint Details: false
         Expand Link Details: false
         Expand Tree: false
         Link Tree Style: Links in Alphabetic Order
-        finger_left_link:
+        base_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        finger_right_link:
+        grasp_frame:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        left/finger_flange_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        gripper_roll_link:
+        left/sensor_frame:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        left/sun_finger_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        real_single_joint_fake_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        sun_finger_left_link:
+        right/finger_flange_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        sun_finger_right_link:
+        right/sensor_frame:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        right/sun_finger_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
@@ -103,38 +115,44 @@ Visualization Manager:
       Enabled: true
       Frame Timeout: 15
       Frames:
-        All Enabled: false
-        finger_left_link:
-          Value: false
-        finger_right_link:
-          Value: false
-        grasp_center:
+        1dof_joint_fake_link:
           Value: true
-        gripper_roll_link:
-          Value: false
-        real_single_joint_fake_link:
-          Value: false
-        sun_finger_left_link:
-          Value: false
-        sun_finger_right_link:
-          Value: false
+        All Enabled: false
+        base_link:
+          Value: true
+        grasp_frame:
+          Value: true
+        left/finger_flange_link:
+          Value: true
+        left/sensor_frame:
+          Value: true
+        left/sun_finger_link:
+          Value: true
+        right/finger_flange_link:
+          Value: true
+        right/sensor_frame:
+          Value: true
+        right/sun_finger_link:
+          Value: true
       Marker Scale: 0.5
       Name: TF
       Show Arrows: true
       Show Axes: true
       Show Names: true
       Tree:
-        gripper_roll_link:
-          finger_left_link:
-            sun_finger_left_link:
-              {}
-          finger_right_link:
-            sun_finger_right_link:
-              {}
-          grasp_center:
+        base_link:
+          1dof_joint_fake_link:
             {}
-          real_single_joint_fake_link:
+          grasp_frame:
             {}
+          left/finger_flange_link:
+            left/sun_finger_link:
+              left/sensor_frame:
+                {}
+          right/finger_flange_link:
+            right/sun_finger_link:
+              right/sensor_frame:
+                {}
       Update Interval: 0
       Value: true
     - Class: rviz/Axes
@@ -148,7 +166,7 @@ Visualization Manager:
   Global Options:
     Background Color: 48; 48; 48
     Default Light: true
-    Fixed Frame: gripper_roll_link
+    Fixed Frame: base_link
     Frame Rate: 30
   Name: root
   Tools:
@@ -169,7 +187,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 0.877586901
+      Distance: 0.526284814
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.0599999987
         Stereo Focal Distance: 1
@@ -184,10 +202,10 @@ Visualization Manager:
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.00999999978
-      Pitch: 0.459797233
+      Pitch: 0.374797702
       Target Frame: <Fixed Frame>
       Value: Orbit (rviz)
-      Yaw: 1.22356033
+      Yaw: 1.62856233
     Saved: ~
 Window Geometry:
   Displays:

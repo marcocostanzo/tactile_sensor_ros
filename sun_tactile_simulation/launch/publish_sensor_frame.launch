@@ -1,0 +1,35 @@
+<launch>
+
+  <arg name="node_name" default="sensor_frame_publisher"/>
+
+  <arg name="finger_frame" default="sun_finger_left_link"/>
+  <arg name="sensor_name" default="sun_sensor_left"/>
+  <arg name="pub_rate" default="100"/>
+
+  <arg name="scale" default="1.0"/>
+
+  <arg name="finger_version" default="v3"/>
+
+
+  <arg name="pi" value="$(eval pi)"/>
+  <arg name="pi_2" value="$(eval pi/2)"/>
+  <arg 
+        if="$(eval arg('finger_version') == 'v3' )" 
+        name="sensor_frame_dz" 
+        value="$(eval 0.110*arg('scale'))"
+  />
+  <arg 
+        if="$(eval arg('finger_version') == 'v3' )" 
+        name="sensor_frame_dx" 
+        value="$(eval -0.020*arg('scale'))"
+  />
+
+  <node
+    name="$(arg node_name)" 
+    pkg="tf" 
+    type="static_transform_publisher" 
+    args="$(arg sensor_frame_dx) 0 $(arg sensor_frame_dz) $(arg pi_2) 0 $(arg pi_2) $(arg finger_frame) $(arg sensor_name) $(arg pub_rate)" 
+  /> 
+
+
+</launch>

@@ -1,0 +1,125 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+<!-- include WSG50 macro -->
+<xacro:include filename="$(find sun_wsg50_simulation)/urdf/wsg50.xacro" />
+
+<!--    
+    MACRO to generate wsg50 with sun fingers
+    prefix = name to use as prefix (default '')
+    base_link = base link of the gripper (default base_link)
+    scale = unit scale, 1.0 = [m] (default 1.0)
+    finger_version = finger version to attach to the gripper (default v3)
+    mimic_joints = if true, create a fake joint for the real 1dof joint of the gripper and ad mimic tag to the 2 prismatic joints (default true)
+    create_sensor_link = if true create a link for the sensor frame (default true)
+                         the sensor frame will be ${prefix}(left|right)/sensor_frame
+    create_sensor_link = if true create a link for the grasp frame (default true)
+                         the grasp frame will be ${prefix}/grasp_frame
+
+    the gripper base link will be ${prefix}${base_link}
+    the two prismatic joints : ${prefix}left/finger_flange_joint and ${prefix}right/finger_flange_joint
+    if mimic_joints=true the fake 1dof joint will be ${prefix}1dof_joint
+-->
+<xacro:macro 
+    name="wsg50_with_sunfinger" 
+    params="
+        prefix:=''
+        base_link:=base_link
+        scale:=1.0
+        finger_version:=v3
+        mimic_joints:=true
+        create_sensor_link:=true
+        create_grasp_link:=true
+        "
+>
+
+    <!-- prefix finger left/right -->
+    <xacro:property name="prefix_finger_left" value="left/"/>
+    <xacro:property name="prefix_finger_right" value="right/"/>
+    <xacro:property name="finger_flange_link" value="finger_flange_link"/>
+    <xacro:property name="finger_flange_left_link" value="${finger_flange_link}"/>
+    <xacro:property name="finger_flange_right_link" value="${finger_flange_link}"/>
+    <xacro:property name="sun_finger_link" value="sun_finger_link"/>
+
+    <!-- wsg50 without fingers -->
+    <!-- 
+        finger_flange_left_link:=default
+        finger_flange_right_link:=default
+    -->
+    <xacro:wsg50 
+        prefix="${prefix}"
+        scale="${scale}"
+        base_link="${base_link}" 
+        mimic_joints="${mimic_joints}"  
+        prefix_finger_left="${prefix_finger_left}"  
+        finger_flange_left_link="${finger_flange_left_link}"
+        prefix_finger_right="${prefix_finger_right}"  
+        finger_flange_right_link="${finger_flange_right_link}"  
+    />
+
+    <!-- 
+        internal MACRO to generate sunfinger with fixed joint
+        prefix = name to use as prefix (default '')
+        parent_link = parent link of fixed joint (default finger_flange_link)
+        joint_name = name of fixed joint (default finger_flange_link-sun_finger_link)
+        finger_link = name of sun finger link (default sun_finger_link)
+    -->
+    <xacro:macro 
+        name="sun_finger_with_fixed_joint" 
+        params="
+            prefix:=''
+            parent_link:=finger_flange_link
+            joint_name:=finger_flange_link-sun_finger_link
+            finger_link:=sun_finger_link
+            "
+    >
+
+        <!-- fixed joint for the sun finger -->
+        <joint name="${prefix}${parent_link}-${finger_link}" type="fixed">
+            <parent link="${prefix}${parent_link}"/>
+            <child link="${prefix}${finger_link}"/>
+            <origin rpy="0 0 0" xyz="${-0.008777405*scale} ${0*scale} ${0.081460829*scale}"/>
+        </joint>
+
+        <!-- Finger V3 -->
+        <xacro:if value="${finger_version=='v3'}">
+            <!-- Import finger macro -->
+            <xacro:include filename="$(find sun_tactile_simulation)/urdf/sun_finger_v3.xacro" />
+            <xacro:sun_finger_v3
+                scale="${scale}"
+                base_link="${finger_link}"
+                prefix="${prefix}"
+                create_sensor_link="${create_sensor_link}"
+            />
+        </xacro:if>
+
+    </xacro:macro> <!-- end macro sun_finger_with_fixed_joint -->
+
+    <xacro:sun_finger_with_fixed_joint
+        prefix="${prefix}${prefix_finger_left}"
+        parent_link="${finger_flange_left_link}"
+        joint_name="${finger_flange_left_link}-${sun_finger_link}"
+        finger_link="${sun_finger_link}"
+    />
+
+    <xacro:sun_finger_with_fixed_joint
+        prefix="${prefix}${prefix_finger_right}"
+        parent_link="${finger_flange_right_link}"
+        joint_name="${finger_flange_right_link}-${sun_finger_link}"
+        finger_link="${sun_finger_link}"
+    />
+
+    <!-- grasp frame -->
+    <xacro:if value="${create_grasp_link}">
+        <link name="${prefix}grasp_frame" />
+        <joint name="${prefix}${base_link}-grasp_frame" type="fixed">
+            <parent link="${prefix}${base_link}" />
+            <child link="${prefix}grasp_frame" />
+            <origin xyz="0 0 ${0.191486403*scale}" rpy="${pi/2} 0 ${pi/2}" />
+        </joint>
+    </xacro:if>
+
+</xacro:macro> <!-- end wsg50_with_fingerv3 -->
+
+
+</robot>
