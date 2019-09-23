@@ -266,3 +266,12 @@ target_link_libraries(evaluate_real_rate
   ${catkin_LIBRARIES}
 )
 #########################################
+#########################################
+add_executable(merge_wrench_tactile
+  src/merge_wrench_tactile_node.cpp
+)
+add_dependencies(merge_wrench_tactile ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(merge_wrench_tactile
+  ${catkin_LIBRARIES}
+)
+#########################################

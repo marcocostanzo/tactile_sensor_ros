@@ -1,0 +1,69 @@
+<launch>
+
+  <arg name="serial_port" default="/dev/ttyUSB0" />
+  <arg name="baud_rate" default="1000000" />
+  <arg name="serial_timeout" default="1000" />
+  <arg name="frame_id" default="fingertip0" />
+
+  <arg name="voltage_raw_topic" default="tactile_voltage_raw" />
+  <arg name="voltage_raw_filter_topic" default="$(arg voltage_raw_topic)_filter" />
+
+  <arg name="filter_voltage_cut_freq" default="326.0" />   <!-- La frequenza di taglio deve coincidere con quella del sensore della ATI 
+								che si può impostare direttamente dalla pagina web - filtro del primo ordine-->
+
+
+  <arg name="filter_voltage_rate" default="800.0" />
+
+   <!-- READ TACTILE -->
+
+	<node name="read_tactile_serial"  pkg="sun_tactile_driver" type="read_tactile_serial" output="screen">
+
+	    <param name="serial_port" type="string" value="$(arg serial_port)"/>
+
+	    <param name="baud_rate" type="string" value="$(arg baud_rate)"/>
+
+	    <param name="serial_timeout" type="string" value="$(arg serial_timeout)"/>
+
+	    <param name="rows" value="5"/>
+	    <param name="cols" value="5"/>
+
+	    <param name="frame_id" type="string" value="$(arg frame_id)"/>
+
+	    <param name="output_topic" type="string" value="$(arg voltage_raw_topic)"/>
+
+	</node>
+
+    <!-- Vedere se il rumore è accettabile senza filtri (nè ATI, nè filter_tactile) -->
+
+	 <node name="filter_tactile"  pkg="sun_tactile_driver" type="filter_tactile" output="screen">
+
+	    <param name="num_voltages" value="25"/>
+
+	    <param name="in_topic" type="string" value="$(arg voltage_raw_topic)"/>
+
+	    <param name="out_topic" type="string" value="$(arg voltage_raw_filter_topic)"/>
+
+	    <param name="cut_freq" value="$(arg filter_voltage_cut_freq)"/>
+	    <param name="rate" value="$(arg filter_voltage_rate)"/>
+
+	  </node>
+
+    <!-- NETFT -->
+
+    <node name="netft_node" pkg="netft_utils" type="netft_node" output="screen" args="192.168.2.120"/>
+    <node name="netft_utils" pkg="netft_utils" type="netft_utils" output="screen" args="/base_link /base_link"/>
+
+	<node name="merge_wrench_tactile" pkg="sun_tactile_driver" type="merge_wrench_tactile" output="screen" >
+
+		<param name="voltage_topic" type="string" value="$(arg voltage_raw_filter_topic)"/>
+
+		<param name="wrench_topic" type="string" value="/transformed_world"/>
+
+		<param name="out_topic" type="string" value="/calib_data"/>
+		
+		<param name="voltages_count" type="int" value="25"/>
+
+  	</node>
+		
+
+</launch>
