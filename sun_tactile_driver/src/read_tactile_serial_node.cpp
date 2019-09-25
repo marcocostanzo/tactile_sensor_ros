@@ -68,6 +68,8 @@ int main(int argc, char *argv[]){
     nh_private.param("cols" , num_cols, 5 );
     string frame_id = string("");
     nh_private.param("frame_id" , frame_id, string("fingertip0") );
+    string tf_prefix = string("");
+    nh_private.param("tf_prefix" , tf_prefix, string("") );
     string topic_name = string("");
     nh_private.param("output_topic" , topic_name, string("/tactile") );
 
@@ -86,7 +88,7 @@ int main(int argc, char *argv[]){
    double voltages_count = num_rows*num_cols;
    sun_tactile_common::TactileStamped finger_voltages;
    finger_voltages.tactile.data.resize(voltages_count);
-   finger_voltages.header.frame_id = frame_id;
+   finger_voltages.header.frame_id = tf_prefix+frame_id;
    finger_voltages.tactile.rows = num_rows;
    finger_voltages.tactile.cols = num_cols;
    finger_voltages.tactile.info = "voltages";

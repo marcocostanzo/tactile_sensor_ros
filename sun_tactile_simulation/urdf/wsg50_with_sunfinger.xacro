@@ -13,8 +13,9 @@
     mimic_joints = if true, create a fake joint for the real 1dof joint of the gripper and ad mimic tag to the 2 prismatic joints (default true)
     create_sensor_link = if true create a link for the sensor frame (default true)
                          the sensor frame will be ${prefix}(left|right)/sensor_frame
-    create_sensor_link = if true create a link for the grasp frame (default true)
+    create_grasp_link = if true create a link for the grasp frame (default true)
                          the grasp frame will be ${prefix}/grasp_frame
+    rotate_grasp_link = if true rotate the grasp link of 180° about x axis (default false)
 
     the gripper base link will be ${prefix}${base_link}
     the two prismatic joints : ${prefix}left/finger_flange_joint and ${prefix}right/finger_flange_joint
@@ -30,6 +31,7 @@
         mimic_joints:=true
         create_sensor_link:=true
         create_grasp_link:=true
+        rotate_grasp_link:=false
         "
 >
 
@@ -110,12 +112,16 @@
     />
 
     <!-- grasp frame -->
+    <xacro:property name="delta_rpy_y" value="0"/>
+    <xacro:if value="${rotate_grasp_link}">
+        <xacro:property name="delta_rpy_y" value="${pi}"/>
+    </xacro:if>
     <xacro:if value="${create_grasp_link}">
         <link name="${prefix}grasp_frame" />
         <joint name="${prefix}${base_link}-grasp_frame" type="fixed">
             <parent link="${prefix}${base_link}" />
             <child link="${prefix}grasp_frame" />
-            <origin xyz="0 0 ${0.191486403*scale}" rpy="${pi/2} 0 ${pi/2}" />
+            <origin xyz="0 0 ${0.191486403*scale}" rpy="${pi/2} 0 ${pi/2+delta_rpy_y}" />
         </joint>
     </xacro:if>
 

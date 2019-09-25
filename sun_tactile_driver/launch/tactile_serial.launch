@@ -10,6 +10,8 @@
 
   <arg name="cols" default="5" />
 
+  <arg name="tf_prefix" default="" />
+
   <arg name="frame_id" default="fingertip0" />
 
   <arg name="output_topic" default="tactile_voltage" />
@@ -26,6 +28,7 @@
       <param name="rows" value="$(arg rows)"/>
       <param name="cols" value="$(arg cols)"/>
 
+      <param name="tf_prefix" type="string" value="$(arg tf_prefix)"/>
       <param name="frame_id" type="string" value="$(arg frame_id)"/>
 
       <param name="output_topic" type="string" value="$(arg output_topic)"/>

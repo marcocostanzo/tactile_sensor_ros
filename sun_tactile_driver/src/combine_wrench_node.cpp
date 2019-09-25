@@ -123,7 +123,9 @@ int main(int argc, char *argv[]){
     string topic_distance_str("");
     nh_private.param("distance_topic" , topic_distance_str, string("distance") );
 	string frame_id("");
-    nh_private.param("frame_id" , frame_id, string("graspCenter") );
+    string tf_prefix("");
+    nh_private.param("tf_prefix" , tf_prefix, string("") );
+    nh_private.param("frame_id" , frame_id, string("grasp_frame") );
     nh_private.param("distance_offset" , distance_offset, 0.0 );
 
     string out_topic_str("");
@@ -141,7 +143,7 @@ int main(int argc, char *argv[]){
 	pubGraspForce = nh_public.advertise<sun_ros_msgs::Float64Stamped>( grasp_force_topic_str, 1); 
     /***************************/
 
-	totalWrench_msg.header.frame_id = frame_id;
+	totalWrench_msg.header.frame_id = tf_prefix+frame_id;
 
 
 /*============LOOP==============*/

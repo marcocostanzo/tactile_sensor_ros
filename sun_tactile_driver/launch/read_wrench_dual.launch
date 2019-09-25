@@ -8,7 +8,9 @@
 <arg name="serial_port_finger0" default="/dev/ttyUSB0" />
 <arg name="serial_port_finger1" default="/dev/ttyUSB1" />
 
+<arg name="tf_prefix_finger0" default="left/"/>
 <arg name="frame_id_finger0" default="fingertip0" />
+<arg name="tf_prefix_finger1" default="right/"/>
 <arg name="frame_id_finger1" default="fingertip1" />
 
 <arg name="finger0_code" default="#F001_rigid" />
@@ -18,7 +20,8 @@
 <arg name="finger_distance_topic" default="distance"/>
 <arg name="finger_distance_offset" default="0.0"/>
 
-<arg name="frame_id_grasp" default="grasp_center"/>
+<arg name="tf_prefix" default=""/>
+<arg name="frame_id_grasp" default="grasp_frame"/>
 
 <arg name="grasp_force_topic" default="grasp_force"/>
 
@@ -29,6 +32,7 @@
 
             <arg name="serial_port" value="$(arg serial_port_finger0)" />
 
+            <arg name="tf_prefix" value="$(arg tf_prefix)$(arg tf_prefix_finger0)"/>
             <arg name="frame_id" value="$(arg frame_id_finger0)" />
 
             <arg name="finger_code" value="$(arg finger0_code)" />
@@ -45,6 +49,7 @@
 
             <arg name="serial_port" value="$(arg serial_port_finger1)" />
 
+            <arg name="tf_prefix" value="$(arg tf_prefix)$(arg tf_prefix_finger1)"/>
             <arg name="frame_id" value="$(arg frame_id_finger1)" />
 
             <arg name="finger_code" value="$(arg finger1_code)" />
@@ -64,6 +69,7 @@
         <param name="distance_topic" type="string" value="$(arg finger_distance_topic)"/>
         <param name="distance_offset" type="double" value="$(arg finger_distance_offset)"/>
 
+        <param name="tf_prefix" type="string" value="$(arg tf_prefix)"/>
         <param name="frame_id" type="string" value="$(arg frame_id_grasp)"/>
 
         <param name="wrench_out_topic" type="string" value="$(arg wrench_topic)"/>
