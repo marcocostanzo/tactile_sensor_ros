@@ -25,10 +25,14 @@
 
 <arg name="grasp_force_topic" default="grasp_force"/>
 
+<arg name="bool_filter_voltage" default="true" />
+
 <arg name="compute_bias_action" default="compute_bias_action" />
 
     <group ns="$(arg namespace_finger0)">
         <include file="$(find sun_tactile_driver)/launch/read_wrench.launch">
+
+            <arg name="bool_filter_voltage" value="$(arg bool_filter_voltage)" />
 
             <arg name="serial_port" value="$(arg serial_port_finger0)" />
 
@@ -46,6 +50,8 @@
 
     <group ns="$(arg namespace_finger1)">
         <include file="$(find sun_tactile_driver)/launch/read_wrench.launch">
+
+            <arg name="bool_filter_voltage" value="$(arg bool_filter_voltage)" />
 
             <arg name="serial_port" value="$(arg serial_port_finger1)" />
 
