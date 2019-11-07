@@ -1,0 +1,63 @@
+<launch>
+
+  <arg name="name_space" default="/wsg_50_driver_sun/finger0" />
+
+  <arg name="frame_id" default="fingertip0" />
+
+  <arg name="serial_port" default="/dev/ttyUSB0" />
+  
+  <arg name="filter_voltages" default="true" />
+  
+  <arg name="voltages_count" default="25" />
+
+  <arg name="do_mean_volt" default="false" />
+
+
+  <node name="read_tactile_serial"  pkg="sun_tactile_driver" type="read_tactile_serial" output="screen">
+
+      <param name="serial_port" type="string" value="/dev/ttyUSB0"/>
+
+      <param name="baud_rate" type="string" value="1000000"/>
+
+      <param name="serial_timeout" type="string" value="1000"/>
+
+      <param name="rows" type="string" value="5"/>
+      <param name="cols" type="string" value="5"/>
+
+      <param name="frame_id" type="string" value="fingertip0"/>
+
+      <param name="output_topic" type="string" value="/tactile/raw"/>
+
+  </node>
+
+   <node name="filter_tactile" pkg="sun_tactile_driver" type="filter_tactile" output="screen">
+
+    <param name="in_topic" type="string" value="/tactile/raw"/>
+
+    <param name="out_topic" type="string" value="/tactile/filter"/>
+    
+    <param name="num_voltages" type="int" value="25"/>
+
+    <param name="cut_freq" value="20.0"/>
+
+    <param name="rate" value="300.0"/>
+
+  </node>
+
+
+  <node name="convert_tactile" pkg="tactile_sensor_sun_calib" type="convert_tactile" output="screen" >
+
+   <param name="voltage_topic" type="string" value="/tactile/filter"/>
+
+	<param name="wrench_topic" type="string" value="/rft_data"/>
+
+   <param name="out_topic" type="string" value="/calib_data"/>
+   
+   <param name="voltages_count" type="int" value="25"/>
+
+  </node>
+
+
+
+</launch>
+

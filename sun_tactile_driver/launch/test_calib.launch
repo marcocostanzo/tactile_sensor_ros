@@ -66,7 +66,7 @@
   	</node>
 
 
-	<!--node name="remove_bias"  pkg="sun_tactile_driver" type="remove_bias" output="screen">
+	<node name="remove_bias"  pkg="sun_tactile_driver" type="remove_bias" output="screen">
 
 		<param name="in_voltage_topic" type="string" value="$(arg voltage_raw_filter_topic)"/>
 
@@ -81,13 +81,13 @@
 
 	<node name="read_wrench" pkg="sun_tactile_driver" type="read_wrench" output="screen">
 
-		<param name="fingerCode" type="string" value="#F003_rigid"/>
+		<param name="fingerCode" type="string" value="#F004_rigid"/>
 
 		<param name="in_voltage_topic" type="string" value="$(arg voltage_raw_filter_topic)/rect"/>
 
 		<param name="wrench_topic" type="string" value="/finger/wrench"/>
 	
-  </node-->
+  </node>
 		
 
 </launch>
