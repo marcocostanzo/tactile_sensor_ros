@@ -43,6 +43,13 @@
     <xacro:property name="finger_flange_right_link" value="${finger_flange_link}"/>
     <xacro:property name="sun_finger_link" value="sun_finger_link"/>
 
+    <xacro:if value="${finger_version=='v3'}">
+        <xacro:property name="grasp_dz" value="0.191486403"/>
+    </xacro:if>
+    <xacro:if value="${finger_version=='v3N'}">
+        <xacro:property name="grasp_dz" value="0.1830145968018"/>
+    </xacro:if>
+
     <!-- wsg50 without fingers -->
     <!-- 
         finger_flange_left_link:=default
@@ -94,6 +101,17 @@
                 create_sensor_link="${create_sensor_link}"
             />
         </xacro:if>
+        <!-- Finger V3N -->
+        <xacro:if value="${finger_version=='v3N'}">
+            <!-- Import finger macro -->
+            <xacro:include filename="$(find sun_tactile_simulation)/urdf/sun_finger_v3N.xacro" />
+            <xacro:sun_finger_v3N
+                scale="${scale}"
+                base_link="${finger_link}"
+                prefix="${prefix}"
+                create_sensor_link="${create_sensor_link}"
+            />
+        </xacro:if>
 
     </xacro:macro> <!-- end macro sun_finger_with_fixed_joint -->
 
@@ -121,7 +139,7 @@
         <joint name="${prefix}${base_link}-grasp_frame" type="fixed">
             <parent link="${prefix}${base_link}" />
             <child link="${prefix}grasp_frame" />
-            <origin xyz="0 0 ${0.191486403*scale}" rpy="${pi/2} 0 ${pi/2+delta_rpy_y}" />
+            <origin xyz="0 0 ${grasp_dz*scale}" rpy="${pi/2} 0 ${pi/2+delta_rpy_y}" />
         </joint>
     </xacro:if>
 

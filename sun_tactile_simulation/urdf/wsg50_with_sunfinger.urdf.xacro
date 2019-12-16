@@ -8,7 +8,7 @@
     prefix=''
     base_link="base_link"
     scale="1.0"
-    finger_version="v3"
+    finger_version="v3N"
     mimic_joints="true"
     create_sensor_link="true"
     create_grasp_link="true"
