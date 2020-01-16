@@ -4,6 +4,13 @@
     uri: https://github.com/wjwwood/serial.git
     version: cbcca7c83745fedd75afb7a0a27ee5c4112435c2
 
+# FROM sun_systems_lib and sun_learning_lib
+- git:
+    local-name: ros_toon
+    uri: https://github.com/marcocostanzo/ros_toon.git
+    version: TOON_3.2
+########################
+
 - git:
     local-name: sun_systems_lib
     uri: https://github.com/marcocostanzo/sun_systems_lib.git
