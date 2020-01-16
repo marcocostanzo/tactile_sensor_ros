@@ -1,0 +1,21 @@
+
+- git:
+    local-name: serial
+    uri: https://github.com/wjwwood/serial.git
+    version: cbcca7c83745fedd75afb7a0a27ee5c4112435c2
+
+- git:
+    local-name: sun_systems_lib
+    uri: https://github.com/marcocostanzo/sun_systems_lib.git
+    version: V2
+
+- git:
+    local-name: sun_learning_lib
+    uri: https://github.com/marcocostanzo/sun_learning_lib.git
+    version: V2
+
+- git:
+    local-name: sun_ros_msgs
+    uri: https://github.com/marcocostanzo/sun_ros_msgs.git
+    version: master
+
