@@ -19,3 +19,8 @@
     uri: git@github.com:marcocostanzo/sun_ros_msgs.git
     version: master
 
+- git:
+    local-name: sun_tactile_sensor
+    uri: git@github.com:marcocostanzo/tactile_sensor_ros.git
+    version: master
+
