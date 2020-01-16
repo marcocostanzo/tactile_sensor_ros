@@ -266,3 +266,12 @@ target_link_libraries(evaluate_real_rate
   ${catkin_LIBRARIES}
 )
 #########################################
+#########################################
+add_executable(rotate_wrench
+  src/rotate_wrench_node.cpp
+)
+add_dependencies(rotate_wrench ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(rotate_wrench
+  ${catkin_LIBRARIES}
+)
+#########################################

@@ -13,8 +13,8 @@
 <arg name="tf_prefix_finger1" default="right/"/>
 <arg name="frame_id_finger1" default="fingertip1" />
 
-<arg name="finger0_code" default="#F001_rigid" />
-<arg name="finger1_code" default="#F002_rigid" />
+<arg name="finger0_code" default="#F004_rigid" />
+<arg name="finger1_code" default="#F003_rigid" />
 <arg name="fingers_boud_rate" default="1000000" />
 
 <arg name="finger_distance_topic" default="distance"/>

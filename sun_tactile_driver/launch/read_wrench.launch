@@ -30,6 +30,16 @@
   <arg name="filter_voltage_cut_freq" default="300.0" />
   <arg name="filter_voltage_rate" default="600.0" />
 
+  <arg name="bool_filter_wrench" default="true" />
+  <arg name="wrench_filter_topic" default="$(arg wrench_topic)_filter" />
+  <arg name="filter_wrench_cut_freq" default="300.0" />
+  <arg name="filter_wrench_rate" default="600.0" />
+
+  <arg name="bool_mov_av_wrench" default="true" />
+  <arg name="mov_av_wrench_N" default="5" />
+  <arg name="mov_av_wrench_rate" default="50.0" />
+  <arg name="wrench_mov_av_topic" default="$(arg wrench_topic)_m_av" />
+
   
   <node name="read_tactile_serial"  pkg="sun_tactile_driver" type="read_tactile_serial" output="screen">
 
@@ -86,6 +96,28 @@
 
     <param name="wrench_topic" type="string" value="$(arg wrench_topic)"/>
 	
+  </node>
+
+  <node if="$(arg bool_filter_wrench)" name="filter_wrench"  pkg="sun_ros_utils_nodes" type="filter_wrench_stamped" output="screen">
+
+    <param name="in_topic" type="string" value="$(arg wrench_topic)"/>
+
+    <param name="out_topic" type="string" value="$(arg wrench_filter_topic)"/>
+
+    <param name="cut_freq" value="$(arg filter_wrench_cut_freq)"/>
+    <param name="rate" value="$(arg filter_wrench_rate)"/>
+
+  </node>
+
+  <node if="$(arg bool_mov_av_wrench)" name="m_av_wrench"  pkg="sun_ros_utils_nodes" type="mov_av_wrench_stamped" output="screen">
+
+    <param name="in_topic" type="string" value="$(arg wrench_filter_topic)"/>
+
+    <param name="out_topic" type="string" value="$(arg wrench_mov_av_topic)"/>
+
+    <param name="mov_av_wrench_N" value="$(arg mov_av_wrench_N)"/>
+    <param name="rate" value="$(arg mov_av_wrench_rate)"/>
+
   </node>
 
 
