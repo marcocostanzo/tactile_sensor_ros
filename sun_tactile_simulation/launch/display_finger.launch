@@ -1,6 +1,6 @@
 <launch>
 
-  <arg name="model" default="$(find sun_tactile_simulation)/urdf/sun_finger_v3N.urdf.xacro"/>
+  <arg name="model" default="$(find sun_tactile_simulation)/urdf/sun_finger_v3a.urdf.xacro"/>
   <arg name="gui" default="true" />
   <arg name="rvizconfig" default="$(find sun_tactile_simulation)/rviz/display_finger.rviz" />
 
