@@ -106,8 +106,8 @@ int main(int argc, char *argv[])
     /***************************/
 
     /******INIT FILTER************/
-    TF_MIMO_DIAGONAL filter(    num_voltages,
-                                TF_FIRST_ORDER_FILTER(cut_freq, 1.0/Hz)
+    sun::TF_MIMO_DIAGONAL filter(    num_voltages,
+                                sun::TF_FIRST_ORDER_FILTER(cut_freq, 1.0/Hz)
                             );
     /***************************/	
 
