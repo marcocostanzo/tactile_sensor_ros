@@ -13,7 +13,7 @@
 - git:
     local-name: sun_systems_lib
     uri: git@github.com:marcocostanzo/sun_systems_lib.git
-    version: V2
+    version: master
 
 - git:
     local-name: sun_learning_lib
