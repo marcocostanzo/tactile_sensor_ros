@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<robot name="sun_finger_v4" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <!-- Import finger macro -->
+  <xacro:include filename="$(find sun_tactile_simulation)/urdf/sun_finger_v4.xacro" />
+  
+  <xacro:sun_finger_v4
+    scale="1.0"
+    base_link="base_link"
+    prefix="finger0/"
+    create_sensor_link="true"
+  />
+
+</robot>

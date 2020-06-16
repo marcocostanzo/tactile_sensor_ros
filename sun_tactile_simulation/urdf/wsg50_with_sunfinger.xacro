@@ -27,7 +27,7 @@
         prefix:=''
         base_link:=base_link
         scale:=1.0
-        finger_version:=v3
+        finger_version:=v4
         mimic_joints:=true
         create_sensor_link:=true
         create_grasp_link:=true
@@ -48,6 +48,9 @@
     </xacro:if>
     <xacro:if value="${finger_version=='v3N'}">
         <xacro:property name="grasp_dz" value="0.1830145968018"/>
+    </xacro:if>
+    <xacro:if value="${finger_version=='v4'}">
+        <xacro:property name="grasp_dz" value="0.183356"/>
     </xacro:if>
 
     <!-- wsg50 without fingers -->
@@ -112,6 +115,17 @@
                 create_sensor_link="${create_sensor_link}"
             />
         </xacro:if>
+        <!-- Finger V4 -->
+        <xacro:if value="${finger_version=='v4'}">
+            <!-- Import finger macro -->
+            <xacro:include filename="$(find sun_tactile_simulation)/urdf/sun_finger_v4.xacro" />
+            <xacro:sun_finger_v4
+                scale="${scale}"
+                base_link="${finger_link}"
+                prefix="${prefix}"
+                create_sensor_link="${create_sensor_link}"
+            />
+        </xacro:if>
 
     </xacro:macro> <!-- end macro sun_finger_with_fixed_joint -->
 
@@ -143,7 +157,7 @@
         </joint>
     </xacro:if>
 
-</xacro:macro> <!-- end wsg50_with_fingerv3 -->
+</xacro:macro> <!-- end wsg50_with_finger -->
 
 
 </robot>
