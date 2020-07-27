@@ -275,3 +275,12 @@ target_link_libraries(rotate_wrench
   ${catkin_LIBRARIES}
 )
 #########################################
+#########################################
+add_executable(mirror_wrench
+  src/mirror_wrench_node.cpp
+)
+add_dependencies(mirror_wrench ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(mirror_wrench
+  ${catkin_LIBRARIES}
+)
+#########################################

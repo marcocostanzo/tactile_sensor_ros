@@ -1,7 +1,6 @@
 <launch>
 
-<arg name="serial_port_finger0" default="/dev/ttyUSB0" />
-<arg name="serial_port_finger1" default="/dev/ttyUSB1" />
+<arg name="serial_port_finger" default="/dev/ttyUSB0" />
 
 <arg name="tf_prefix" default=""/>
 <arg name="tf_subprefix_finger0" default="left/"/>
@@ -12,9 +11,8 @@
 
 <arg name="grasp_force_topic" default="grasp_force"/>
 
-<arg name="finger0_code" default="#F401" />
-<arg name="finger1_code" default="#F402" />
-<arg name="fingers_boud_rate" default="1000000" />
+<arg name="finger_code" default="#F402" />
+<arg name="finger_boud_rate" default="1000000" />
 
 <arg name="finger_distance_topic" default="distance"/>
 <arg name="finger_distance_offset" default="0.0"/>
@@ -33,39 +31,30 @@
 
             <arg name="bool_filter_voltage" value="$(arg bool_filter_voltage)" />
 
-            <arg name="serial_port" value="$(arg serial_port_finger0)" />
+            <arg name="serial_port" value="$(arg serial_port_finger)" />
 
             <arg name="tf_prefix" value="$(arg tf_prefix)$(arg tf_subprefix_finger0)"/>
             <arg name="frame_id" value="$(arg frame_id_finger0)" />
 
-            <arg name="finger_code" value="$(arg finger0_code)" />
+            <arg name="finger_code" value="$(arg finger_code)" />
 
-            <arg name="baud_rate" value="$(arg fingers_boud_rate)" />
-
-            <arg name="action_compute_bias" value="$(arg compute_bias_action)" />
-    
-        </include>
-    </group>
-
-<!-- Finger1 -->
-    <group ns="$(arg namespace_finger1)">
-        <include file="$(find sun_tactile_driver)/launch/read_wrench.launch">
-
-            <arg name="bool_filter_voltage" value="$(arg bool_filter_voltage)" />
-
-            <arg name="serial_port" value="$(arg serial_port_finger1)" />
-
-            <arg name="tf_prefix" value="$(arg tf_prefix)$(arg tf_subprefix_finger1)"/>
-            <arg name="frame_id" value="$(arg frame_id_finger1)" />
-
-            <arg name="finger_code" value="$(arg finger1_code)" />
-
-            <arg name="baud_rate" value="$(arg fingers_boud_rate)" />
+            <arg name="baud_rate" value="$(arg finger_boud_rate)" />
 
             <arg name="action_compute_bias" value="$(arg compute_bias_action)" />
     
         </include>
     </group>
+
+<!-- Finger1 (mirrored)-->
+    <include file="$(find sun_tactile_driver)/launch/mirror_wrench.launch">
+
+        <arg name="namespace_topics_to_be_duplicated" value="$(arg namespace_finger0)" />
+        <arg name="namespace_duplicated_topics" value="$(arg namespace_finger1)" />
+
+        <arg name="tf_prefix" value="$(arg tf_prefix)$(arg tf_subprefix_finger1)"/>
+        <arg name="frame_id" value="$(arg frame_id_finger1)" />
+    
+    </include>
     
 
 <!-- Combine wrench -->
