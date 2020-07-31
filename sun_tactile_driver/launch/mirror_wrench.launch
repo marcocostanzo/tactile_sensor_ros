@@ -14,6 +14,9 @@
   <arg name="out_wrench_filter_topic" default="wrench_filter" />
   <arg name="out_wrench_mov_av_topic" default="wrench_m_av" />
 
+  <arg name="in_action_compute_bias" default="tactile_voltage/compute_bias_action" />
+  <arg name="out_action_compute_bias" default="tactile_voltage/compute_bias_action" />
+
   
   <node name="mirror_wrench"  pkg="sun_tactile_driver" type="mirror_wrench" output="screen">
 
@@ -44,6 +47,8 @@
     <param name="frame_id" type="string" value="$(arg frame_id)"/>
   
   </node>
+
+  <remap from="$(arg namespace_duplicated_topics)/$(arg out_action_compute_bias)" to="$(arg namespace_topics_to_be_duplicated)/$(arg in_action_compute_bias)"/>
 
 
 </launch>

@@ -53,6 +53,9 @@
 
         <arg name="tf_prefix" value="$(arg tf_prefix)$(arg tf_subprefix_finger1)"/>
         <arg name="frame_id" value="$(arg frame_id_finger1)" />
+
+        <arg name="in_action_compute_bias" default="$(arg namespace_finger0)/$(arg compute_bias_action)" />
+        <arg name="out_action_compute_bias" default="$(arg namespace_finger1)/$(arg compute_bias_action)" />
     
     </include>
     

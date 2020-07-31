@@ -18,7 +18,7 @@
 
   <arg name="voltage_rect_topic" default="tactile_voltage/rect" />
 
-  <arg name="action_compute_bias" default="tactile_voltage/action_compute_bias" />
+  <arg name="action_compute_bias" default="tactile_voltage/compute_bias_action" />
 
   <!-- Insert here finger ID [e.g. #F001-28A] | You MUST provide a calibration folder in <pkg-name>/Finger_files-->
   <arg name="finger_code" default="#F402" />
