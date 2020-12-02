@@ -284,3 +284,12 @@ target_link_libraries(mirror_wrench
   ${catkin_LIBRARIES}
 )
 #########################################
+#########################################
+add_executable(tactile_logic_filter
+  src/tactile_logic_filter_node.cpp
+)
+add_dependencies(tactile_logic_filter ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(tactile_logic_filter
+  ${catkin_LIBRARIES}
+)
+#########################################
