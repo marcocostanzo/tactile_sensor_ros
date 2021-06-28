@@ -218,7 +218,7 @@ void updateWrench(){
     // graspFroce_msg.data = 2.0*fabs(fz1);
     graspFroce_msg.header = totalWrench_msg.header;
 
-    //totalWrench_msg.wrench.force.z = graspFroce_msg.data;
+    totalWrench_msg.wrench.force.z = graspFroce_msg.data;
 
     pubWrench.publish(totalWrench_msg);
 	pubGraspForce.publish(graspFroce_msg);
