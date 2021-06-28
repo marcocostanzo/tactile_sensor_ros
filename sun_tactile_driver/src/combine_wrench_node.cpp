@@ -205,8 +205,20 @@ void updateWrench(){
     totalWrench_msg.wrench.torque.y = trWrench0.wrench.torque.y + trWrench1.wrench.torque.y;
     totalWrench_msg.wrench.torque.z = trWrench0.wrench.torque.z + trWrench1.wrench.torque.z;
 
-	graspFroce_msg.data = 2.0*min(fabs(fz0),fabs(fz1));
+    // totalWrench_msg.wrench.force.x = 2.0*trWrench1.wrench.force.x;
+    // totalWrench_msg.wrench.force.y = trWrench1.wrench.force.y;
+    // totalWrench_msg.wrench.force.z = trWrench1.wrench.force.z;
+
+    // totalWrench_msg.wrench.torque.x = trWrench1.wrench.torque.x;
+    // totalWrench_msg.wrench.torque.y = trWrench1.wrench.torque.y;
+    // totalWrench_msg.wrench.torque.z = 2.0*trWrench1.wrench.torque.z;
+
+	// graspFroce_msg.data = 2.0*min(fabs(fz0),fabs(fz1));
+    graspFroce_msg.data = fabs(fz0)+fabs(fz1);
+    // graspFroce_msg.data = 2.0*fabs(fz1);
     graspFroce_msg.header = totalWrench_msg.header;
+
+    //totalWrench_msg.wrench.force.z = graspFroce_msg.data;
 
     pubWrench.publish(totalWrench_msg);
 	pubGraspForce.publish(graspFroce_msg);

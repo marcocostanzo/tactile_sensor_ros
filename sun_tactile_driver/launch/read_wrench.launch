@@ -14,28 +14,34 @@
 
   <arg name="frame_id" default="fingertip0" />
 
-  <arg name="voltage_raw_topic" default="tactile_voltage/raw" />
-
-  <arg name="voltage_rect_topic" default="tactile_voltage/rect" />
-
-  <arg name="action_compute_bias" default="tactile_voltage/compute_bias_action" />
-
   <!-- Insert here finger ID [e.g. #F001-28A] | You MUST provide a calibration folder in <pkg-name>/Finger_files-->
   <arg name="finger_code" default="#F401" />
 
+  <arg name="bool_tactile_logic_filter" default="true" />
+  <arg name="bool_use_tactile_logic_filter" default="$(arg bool_tactile_logic_filter)" />
+  <arg name="logic_filter_voltage_thr" default="0.05" />
+
+  <arg name="bool_filter_voltage" default="false" />
+  <arg name="bool_use_filtered_voltage" default="$(arg bool_filter_voltage)" />
+  <arg name="filter_voltage_cut_freq" default="50.0" />
+  <arg name="filter_voltage_rate" default="500.0" />
+
+  <arg name="bool_filter_wrench" default="false" />
+  <arg name="filter_wrench_cut_freq" default="50.0" />
+  <arg name="filter_wrench_rate" default="500.0" />
+
+  <!-- Invariant args -->
+  <arg name="voltage_raw_topic" default="tactile_voltage/raw" />
+  <arg name="voltage_raw_checked_topic" default="$(arg voltage_raw_topic)_checked" />
+  <arg name="voltage_rect_topic" default="tactile_voltage/rect" />
+  <arg name="action_compute_bias" default="compute_bias_action" />
   <arg name="wrench_topic" default="wrench" />
-
-  <arg name="bool_filter_voltage" default="true" />
   <arg name="voltage_raw_filter_topic" default="$(arg voltage_raw_topic)_filter" />
-  <arg name="filter_voltage_cut_freq" default="300.0" />
-  <arg name="filter_voltage_rate" default="600.0" />
-
-  <arg name="bool_filter_wrench" default="true" />
   <arg name="wrench_filter_topic" default="$(arg wrench_topic)_filter" />
-  <arg name="filter_wrench_cut_freq" default="300.0" />
-  <arg name="filter_wrench_rate" default="600.0" />
 
-  <arg name="bool_mov_av_wrench" default="true" />
+  <!-- LEGACY -->
+  <arg name="bool_mov_av_wrench" default="false" />
+  <arg name="bool_use_filtered_wrench_in_mov_av" default="$(arg bool_filter_wrench)" />
   <arg name="mov_av_wrench_N" default="5" />
   <arg name="mov_av_wrench_rate" default="50.0" />
   <arg name="wrench_mov_av_topic" default="$(arg wrench_topic)_m_av" />
@@ -59,13 +65,13 @@
 
   </node>
 
-  <node name="tactile_logic_filter"  pkg="sun_tactile_driver" type="tactile_logic_filter" output="screen">
+  <node if="$(arg bool_tactile_logic_filter)" name="tactile_logic_filter"  pkg="sun_tactile_driver" type="tactile_logic_filter" output="screen">
 
     <param name="in_topic" type="string" value="$(arg voltage_raw_topic)"/>
 
-    <param name="out_topic" type="string" value="$(arg voltage_raw_topic)_checked"/>
+    <param name="out_topic" type="string" value="$(arg voltage_raw_checked_topic)"/>
 
-    <param name="volt_thr" value="0.05"/>
+    <param name="volt_thr" value="$(arg logic_filter_voltage_thr)"/>
 
   </node>
 
@@ -73,7 +79,8 @@
 
     <param name="num_voltages" value="$(eval arg('cols') * arg('rows'))"/>
 
-    <param name="in_topic" type="string" value="$(arg voltage_raw_topic)_checked"/>
+    <param if="$(arg bool_use_tactile_logic_filter)" name="in_topic" type="string" value="$(arg voltage_raw_checked_topic)"/>
+    <param unless="$(arg bool_use_tactile_logic_filter)" name="in_topic" type="string" value="$(arg voltage_raw_topic)"/>
 
     <param name="out_topic" type="string" value="$(arg voltage_raw_filter_topic)"/>
 
@@ -84,8 +91,24 @@
 
   <node name="remove_bias"  pkg="sun_tactile_driver" type="remove_bias" output="screen">
 
-    <param name="in_voltage_topic" type="string" value="$(arg voltage_raw_topic)_checked" unless="$(arg bool_filter_voltage)"/>
-    <param name="in_voltage_topic" type="string" value="$(arg voltage_raw_filter_topic)" if="$(arg bool_filter_voltage)"/>
+    <param 
+     if="$(eval (not arg('bool_use_filtered_voltage')) and (not arg('bool_use_tactile_logic_filter')))"
+     name="in_voltage_topic" 
+     type="string" 
+     value="$(arg voltage_raw_topic)"
+     />
+    <param
+     if="$(eval (not arg('bool_use_filtered_voltage')) and (arg('bool_use_tactile_logic_filter')))"
+     name="in_voltage_topic" 
+     type="string" 
+     value="$(arg voltage_raw_checked_topic)"
+    />
+    <param 
+      if="$(arg bool_use_filtered_voltage)" 
+      name="in_voltage_topic" 
+      type="string" 
+      value="$(arg voltage_raw_filter_topic)"
+    />
 
     <param name="out_voltage_topic" type="string" value="$(arg voltage_rect_topic)"/>
 
@@ -121,7 +144,8 @@
 
   <node if="$(arg bool_mov_av_wrench)" name="m_av_wrench"  pkg="sun_ros_utils_nodes" type="mov_av_wrench_stamped" output="screen">
 
-    <param name="in_topic" type="string" value="$(arg wrench_filter_topic)"/>
+    <param if="$(arg bool_use_filtered_wrench_in_mov_av)" name="in_topic" type="string" value="$(arg wrench_filter_topic)"/>
+    <param unless="$(arg bool_use_filtered_wrench_in_mov_av)" name="in_topic" type="string" value="$(arg wrench_topic)"/>
 
     <param name="out_topic" type="string" value="$(arg wrench_mov_av_topic)"/>
 

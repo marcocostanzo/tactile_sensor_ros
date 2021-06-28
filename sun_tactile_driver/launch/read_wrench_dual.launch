@@ -4,13 +4,11 @@
 <arg name="serial_port_finger1" default="/dev/ttyUSB1" />
 
 <arg name="tf_prefix" default=""/>
-<arg name="tf_subprefix_finger0" default="left/"/>
+<arg name="tf_subprefix_finger0" default="left_"/>
 <arg name="frame_id_finger0" default="fingertip0" />
-<arg name="tf_subprefix_finger1" default="right/"/>
+<arg name="tf_subprefix_finger1" default="right_"/>
 <arg name="frame_id_finger1" default="fingertip1" />
 <arg name="frame_id_grasp" default="grasp_frame"/>
-
-<arg name="grasp_force_topic" default="grasp_force"/>
 
 <arg name="finger0_code" default="#F401" />
 <arg name="finger1_code" default="#F402" />
@@ -19,19 +17,29 @@
 <arg name="finger_distance_topic" default="distance"/>
 <arg name="finger_distance_offset" default="0.0"/>
 
-<arg name="bool_filter_voltage" default="true" />
+<arg name="bool_filter_voltage" default="false" />
+<arg name="bool_use_filtered_voltage" default="$(arg bool_filter_voltage)" />
+<arg name="filter_voltage_cut_freq" default="50.0" />
+<arg name="filter_voltage_rate" default="500.0" />
+
+<arg name="bool_tactile_logic_filter" default="true" />
+<arg name="bool_use_tactile_logic_filter" default="$(arg bool_tactile_logic_filter)" />
+<arg name="tactile_logic_filter_voltage_thr" default="0.05" />
+
+<arg name="bool_filter_wrench" default="true" />
+<arg name="bool_use_filtered_wrench" default="$(arg bool_filter_wrench)" />
+<arg name="filter_wrench_cut_freq" default="50.0" />
+<arg name="filter_wrench_rate" default="500.0" />
 
 <!-- Arg that will not change in practice -->
 <arg name="wrench_topic" default="wrench"/>
 <arg name="namespace_finger0" default="finger0" />
 <arg name="namespace_finger1" default="finger1" />
-<arg name="compute_bias_action" default="compute_bias_action" />
+<arg name="grasp_force_topic" default="grasp_force"/>
 
 <!-- Finger0 -->
     <group ns="$(arg namespace_finger0)">
         <include file="$(find sun_tactile_driver)/launch/read_wrench.launch">
-
-            <arg name="bool_filter_voltage" value="$(arg bool_filter_voltage)" />
 
             <arg name="serial_port" value="$(arg serial_port_finger0)" />
 
@@ -42,7 +50,18 @@
 
             <arg name="baud_rate" value="$(arg fingers_boud_rate)" />
 
-            <arg name="action_compute_bias" value="$(arg compute_bias_action)" />
+            <arg name="bool_tactile_logic_filter" value="$(arg bool_tactile_logic_filter)" />
+            <arg name="bool_use_tactile_logic_filter" value="$(arg bool_use_tactile_logic_filter)" />
+            <arg name="logic_filter_voltage_thr" value="$(arg tactile_logic_filter_voltage_thr)" />
+
+            <arg name="bool_filter_voltage" value="$(arg bool_filter_voltage)" />
+            <arg name="bool_use_filtered_voltage" value="$(arg bool_use_filtered_voltage)" />
+            <arg name="filter_voltage_cut_freq" value="$(arg filter_voltage_cut_freq)" />
+            <arg name="filter_voltage_rate" value="$(arg filter_voltage_rate)" />
+
+            <arg name="bool_filter_wrench" value="$(arg bool_filter_wrench)" />
+            <arg name="filter_wrench_cut_freq" value="$(arg filter_wrench_cut_freq)" />
+            <arg name="filter_wrench_rate" value="$(arg filter_wrench_rate)" />
     
         </include>
     </group>
@@ -50,8 +69,6 @@
 <!-- Finger1 -->
     <group ns="$(arg namespace_finger1)">
         <include file="$(find sun_tactile_driver)/launch/read_wrench.launch">
-
-            <arg name="bool_filter_voltage" value="$(arg bool_filter_voltage)" />
 
             <arg name="serial_port" value="$(arg serial_port_finger1)" />
 
@@ -62,7 +79,18 @@
 
             <arg name="baud_rate" value="$(arg fingers_boud_rate)" />
 
-            <arg name="action_compute_bias" value="$(arg compute_bias_action)" />
+            <arg name="bool_tactile_logic_filter" value="$(arg bool_tactile_logic_filter)" />
+            <arg name="bool_use_tactile_logic_filter" value="$(arg bool_use_tactile_logic_filter)" />
+            <arg name="logic_filter_voltage_thr" value="$(arg tactile_logic_filter_voltage_thr)" />
+
+            <arg name="bool_filter_voltage" value="$(arg bool_filter_voltage)" />
+            <arg name="bool_use_filtered_voltage" value="$(arg bool_use_filtered_voltage)" />
+            <arg name="filter_voltage_cut_freq" value="$(arg filter_voltage_cut_freq)" />
+            <arg name="filter_voltage_rate" value="$(arg filter_voltage_rate)" />
+
+            <arg name="bool_filter_wrench" value="$(arg bool_filter_wrench)" />
+            <arg name="filter_wrench_cut_freq" value="$(arg filter_wrench_cut_freq)" />
+            <arg name="filter_wrench_rate" value="$(arg filter_wrench_rate)" />
     
         </include>
     </group>
@@ -72,8 +100,30 @@
 
     <node name="combine_wrench" pkg="sun_tactile_driver" type="combine_wrench" output="screen">
 
-        <param name="wrench0_topic" type="string" value="$(arg namespace_finger0)/wrench"/>
-        <param name="wrench1_topic" type="string" value="$(arg namespace_finger1)/wrench"/>
+        <param 
+            if="$(arg bool_use_filtered_wrench)" 
+            name="wrench0_topic" 
+            type="string" 
+            value="$(arg namespace_finger0)/wrench_filter"
+        />
+        <param 
+            unless="$(arg bool_use_filtered_wrench)"
+            name="wrench0_topic" 
+            type="string" 
+            value="$(arg namespace_finger0)/wrench"
+        />
+        <param 
+            if="$(arg bool_use_filtered_wrench)"
+            name="wrench1_topic" 
+            type="string" 
+            value="$(arg namespace_finger1)/wrench_filter"
+        />
+        <param 
+            unless="$(arg bool_use_filtered_wrench)"
+            name="wrench1_topic" 
+            type="string" 
+            value="$(arg namespace_finger1)/wrench"
+        />
 
         <param name="distance_topic" type="string" value="$(arg finger_distance_topic)"/>
         <param name="distance_offset" type="double" value="$(arg finger_distance_offset)"/>

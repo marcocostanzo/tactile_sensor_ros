@@ -9,10 +9,8 @@
 
   <arg name="in_wrench_topic" default="wrench" />
   <arg name="in_wrench_filter_topic" default="wrench_filter" />
-  <arg name="in_wrench_mov_av_topic" default="wrench_m_av" />
   <arg name="out_wrench_topic" default="wrench" />
   <arg name="out_wrench_filter_topic" default="wrench_filter" />
-  <arg name="out_wrench_mov_av_topic" default="wrench_m_av" />
 
   <arg name="in_action_compute_bias" default="tactile_voltage/compute_bias_action" />
   <arg name="out_action_compute_bias" default="tactile_voltage/compute_bias_action" />
@@ -36,16 +34,6 @@
     <param name="tf_prefix" type="string" value="$(arg tf_prefix)"/>
     <param name="frame_id" type="string" value="$(arg frame_id)"/>
 
-  </node>
-
-  <node name="mirror_wrench_mov_av"  pkg="sun_tactile_driver" type="mirror_wrench" output="screen">
-
-    <param name="in_wrench" type="string" value="$(arg namespace_topics_to_be_duplicated)/$(arg in_wrench_mov_av_topic)"/>
-    <param name="out_wrench" type="string" value="$(arg namespace_duplicated_topics)/$(arg out_wrench_mov_av_topic)"/>
-
-    <param name="tf_prefix" type="string" value="$(arg tf_prefix)"/>
-    <param name="frame_id" type="string" value="$(arg frame_id)"/>
-  
   </node>
 
   <remap from="$(arg namespace_duplicated_topics)/$(arg out_action_compute_bias)" to="$(arg namespace_topics_to_be_duplicated)/$(arg in_action_compute_bias)"/>
