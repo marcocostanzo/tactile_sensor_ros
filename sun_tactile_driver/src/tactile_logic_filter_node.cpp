@@ -7,6 +7,9 @@ double volt_thr;
 ros::Publisher pubVolt;
 std::vector<float> prev_volts;
 
+int check_warn_max_times = 5;
+int check_warn_count = 0;
+
 //==========TOPICs CALLBKs=========//
 void readV(const sun_tactile_common::TactileStamped::ConstPtr& msg)
 {
@@ -29,9 +32,19 @@ void readV(const sun_tactile_common::TactileStamped::ConstPtr& msg)
   {
     if (fabs(msg->tactile.data[i] - prev_volts[i]) > volt_thr)
     {
-      return;
+      if(check_warn_count < check_warn_max_times)
+      {
+        check_warn_count++;
+        return;
+      }
+      else
+      {
+        ROS_ERROR_STREAM("tactile_logic_filter: invalid voltage for " << check_warn_count << " times on voltage #" << i );
+      }
     }
   }
+
+  check_warn_count = 0;
 
   prev_volts = msg->tactile.data;
 
