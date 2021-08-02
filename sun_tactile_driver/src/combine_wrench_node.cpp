@@ -174,7 +174,8 @@ geometry_msgs::WrenchStamped trWrench( const geometry_msgs::WrenchStamped::Const
     Vector<3> m_tr;
 
     f_tr = R*f;
-    m_tr = R*( (r ^ f) + m );
+    // m_tr = R*( -(r ^ f) + m );
+    m_tr = R*m + (-(R*r) ^ f_tr);
 
     geometry_msgs::WrenchStamped outMsg;
 
