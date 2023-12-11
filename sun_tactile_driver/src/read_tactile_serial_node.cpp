@@ -113,7 +113,7 @@ int main(int argc, char *argv[]){
 		
 		for (int i = 0; i < voltages_count; i++) {
 
-            finger_voltages.tactile.data[i] = (double)(readBytes[i*2] + (readBytes[i*2+1]&0b00001111)*255) * 3.3/4096.0;
+            finger_voltages.tactile.data[i] = (double)(readBytes[i*2] + (readBytes[i*2+1]&0b00001111)*256) * 3.3/4096.0;
 
 		}
 		
